@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>מאגר ידע - קטגוריות וקשרים</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --md-sys-color-primary: #6750A4;
+      --md-sys-color-on-primary: #FFFFFF;
+      --md-sys-color-primary-container: #EADDFF;
+      --md-sys-color-on-primary-container: #21005D;
+      --md-sys-color-secondary: #625B71;
+      --md-sys-color-secondary-container: #E8DEF8;
+      --md-sys-color-surface: #FFFBFE;
+      --md-sys-color-surface-variant: #E7E0EC;
+      --md-sys-color-on-surface: #1C1B1F;
+      --md-sys-color-on-surface-variant: #49454F;
+      --md-sys-color-outline: #79747E;
+      --md-sys-color-outline-variant: #CAC4D0;
+      --md-sys-color-error: #B3261E;
+      --md-sys-color-tertiary: #7D5260;
+      --md-sys-color-tertiary-container: #FFD8E4;
+      --md-elevation-1: 0 1px 2px rgba(0,0,0,.3), 0 1px 3px 1px rgba(0,0,0,.15);
+      --md-elevation-2: 0 1px 2px rgba(0,0,0,.3), 0 2px 6px 2px rgba(0,0,0,.15);
+      --md-elevation-3: 0 4px 8px 3px rgba(0,0,0,.15), 0 1px 3px rgba(0,0,0,.3);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: #F4EFF4;
+      color: var(--md-sys-color-on-surface);
+      min-height: 100vh;
+    }
+
+    /* Top App Bar */
+    .top-app-bar {
+      background: var(--md-sys-color-surface);
+      padding: 0 16px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      box-shadow: var(--md-elevation-2);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .top-app-bar h1 {
+      font-size: 22px;
+      font-weight: 400;
+      color: var(--md-sys-color-on-surface);
+      flex: 1;
+    }
+    .top-app-bar a {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: var(--md-sys-color-primary);
+      font-size: 14px;
+      font-weight: 500;
+      padding: 8px 16px;
+      border-radius: 20px;
+      transition: background .2s;
+    }
+    .top-app-bar a:hover { background: var(--md-sys-color-primary-container); }
+
+    .main-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 24px;
+      padding: 24px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* Navigation Rail / Categories Panel */
+    .categories-panel {
+      background: var(--md-sys-color-surface);
+      border-radius: 28px;
+      padding: 16px;
+      box-shadow: var(--md-elevation-1);
+      height: fit-content;
+      position: sticky;
+      top: 88px;
+    }
+    .categories-panel h2 {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--md-sys-color-on-surface-variant);
+      padding: 8px 12px;
+      margin-bottom: 8px;
+    }
+    .category-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all .2s;
+      font-size: 14px;
+      color: var(--md-sys-color-on-surface-variant);
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: right;
+    }
+    .category-item:hover { background: var(--md-sys-color-surface-variant); }
+    .category-item.active {
+      background: var(--md-sys-color-secondary-container);
+      color: var(--md-sys-color-on-surface);
+      font-weight: 500;
+    }
+    .category-item .badge {
+      margin-right: auto;
+      background: var(--md-sys-color-primary);
+      color: white;
+      border-radius: 12px;
+      padding: 2px 8px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .category-item.active .badge { background: var(--md-sys-color-secondary); }
+
+    .add-category-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      margin-top: 8px;
+      border-radius: 20px;
+      border: 1px dashed var(--md-sys-color-outline);
+      background: none;
+      color: var(--md-sys-color-primary);
+      cursor: pointer;
+      font-size: 13px;
+      width: 100%;
+      transition: all .2s;
+    }
+    .add-category-btn:hover { background: var(--md-sys-color-primary-container); }
+
+    /* Content Area */
+    .content-area { display: flex; flex-direction: column; gap: 16px; }
+
+    /* FAB */
+    .fab-container {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+    .fab {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 20px;
+      background: var(--md-sys-color-primary-container);
+      color: var(--md-sys-color-on-primary-container);
+      border: none;
+      border-radius: 16px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      box-shadow: var(--md-elevation-3);
+      transition: all .2s;
+    }
+    .fab:hover { box-shadow: var(--md-elevation-2); transform: translateY(-1px); }
+    .fab.primary {
+      background: var(--md-sys-color-primary);
+      color: var(--md-sys-color-on-primary);
+    }
+
+    /* Cards */
+    .items-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 16px;
+    }
+    .card {
+      background: var(--md-sys-color-surface);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: var(--md-elevation-1);
+      transition: all .2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .card:hover { box-shadow: var(--md-elevation-2); transform: translateY(-2px); }
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .card-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--md-sys-color-primary-container);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .card-title { font-size: 16px; font-weight: 500; }
+    .card-category {
+      font-size: 12px;
+      color: var(--md-sys-color-on-surface-variant);
+      margin-top: 2px;
+    }
+    .card-content {
+      font-size: 14px;
+      color: var(--md-sys-color-on-surface-variant);
+      line-height: 1.6;
+    }
+    .card-relations {
+      margin-top: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .relation-chip {
+      background: var(--md-sys-color-secondary-container);
+      color: var(--md-sys-color-secondary);
+      border-radius: 8px;
+      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .card-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 14px;
+      justify-content: flex-end;
+    }
+    .icon-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: none;
+      background: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--md-sys-color-on-surface-variant);
+      transition: background .2s;
+    }
+    .icon-btn:hover { background: var(--md-sys-color-surface-variant); }
+    .icon-btn.danger:hover { background: #FFDAD6; color: var(--md-sys-color-error); }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 60px 24px;
+      color: var(--md-sys-color-on-surface-variant);
+      grid-column: 1/-1;
+    }
+    .empty-state .material-symbols-outlined { font-size: 64px; opacity: .4; }
+    .empty-state p { margin-top: 16px; font-size: 16px; }
+
+    /* Dialog / Modal */
+    .dialog-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.5);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .dialog-overlay.open { display: flex; }
+    .dialog {
+      background: var(--md-sys-color-surface);
+      border-radius: 28px;
+      padding: 24px;
+      width: 100%;
+      max-width: 560px;
+      box-shadow: var(--md-elevation-3);
+      animation: dialogIn .2s ease-out;
+    }
+    @keyframes dialogIn {
+      from { transform: scale(.9); opacity: 0; }
+      to   { transform: scale(1);  opacity: 1; }
+    }
+    .dialog h2 { font-size: 24px; font-weight: 400; margin-bottom: 8px; }
+    .dialog p.subtitle { font-size: 14px; color: var(--md-sys-color-on-surface-variant); margin-bottom: 20px; }
+
+    /* Text Field MD3 */
+    .field-wrapper { position: relative; margin-bottom: 16px; }
+    .field-wrapper label {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      font-size: 14px;
+      color: var(--md-sys-color-on-surface-variant);
+      pointer-events: none;
+      transition: all .15s;
+      background: var(--md-sys-color-surface);
+      padding: 0 4px;
+    }
+    .field-wrapper input:focus ~ label,
+    .field-wrapper input:not(:placeholder-shown) ~ label,
+    .field-wrapper textarea:focus ~ label,
+    .field-wrapper textarea:not(:placeholder-shown) ~ label,
+    .field-wrapper select:focus ~ label,
+    .field-wrapper select:valid ~ label {
+      top: -8px;
+      font-size: 12px;
+      color: var(--md-sys-color-primary);
+    }
+    .field-wrapper input,
+    .field-wrapper textarea,
+    .field-wrapper select {
+      width: 100%;
+      padding: 16px;
+      border: 1px solid var(--md-sys-color-outline);
+      border-radius: 4px;
+      font-size: 16px;
+      font-family: inherit;
+      background: var(--md-sys-color-surface);
+      color: var(--md-sys-color-on-surface);
+      outline: none;
+      transition: border-color .2s;
+      appearance: none;
+    }
+    .field-wrapper input:focus,
+    .field-wrapper textarea:focus,
+    .field-wrapper select:focus {
+      border-color: var(--md-sys-color-primary);
+      border-width: 2px;
+    }
+    .field-wrapper textarea { min-height: 100px; resize: vertical; }
+
+    /* Chips input for relations */
+    .chips-input-container {
+      border: 1px solid var(--md-sys-color-outline);
+      border-radius: 4px;
+      padding: 8px;
+      min-height: 56px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+      cursor: text;
+      transition: border-color .2s;
+    }
+    .chips-input-container:focus-within {
+      border-color: var(--md-sys-color-primary);
+      border-width: 2px;
+    }
+    .chip-tag {
+      background: var(--md-sys-color-secondary-container);
+      color: var(--md-sys-color-secondary);
+      border-radius: 8px;
+      padding: 4px 8px;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .chip-tag button {
+      border: none;
+      background: none;
+      cursor: pointer;
+      color: inherit;
+      font-size: 16px;
+      line-height: 1;
+      padding: 0;
+    }
+    .chips-input-container input {
+      border: none !important;
+      outline: none;
+      padding: 4px !important;
+      font-size: 14px;
+      flex: 1;
+      min-width: 80px;
+      background: transparent;
+    }
+
+    .dialog-actions {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+      margin-top: 8px;
+    }
+    .btn-text {
+      padding: 10px 24px;
+      border: none;
+      background: none;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      color: var(--md-sys-color-primary);
+      transition: background .2s;
+    }
+    .btn-text:hover { background: var(--md-sys-color-primary-container); }
+    .btn-filled {
+      padding: 10px 24px;
+      border: none;
+      background: var(--md-sys-color-primary);
+      color: var(--md-sys-color-on-primary);
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: box-shadow .2s;
+    }
+    .btn-filled:hover { box-shadow: var(--md-elevation-2); }
+
+    /* Snackbar */
+    .snackbar {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: #313033;
+      color: #fff;
+      padding: 14px 20px;
+      border-radius: 4px;
+      font-size: 14px;
+      z-index: 300;
+      transition: transform .3s;
+      white-space: nowrap;
+    }
+    .snackbar.show { transform: translateX(-50%) translateY(0); }
+
+    /* Search bar */
+    .search-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--md-sys-color-surface);
+      border-radius: 28px;
+      padding: 12px 20px;
+      box-shadow: var(--md-elevation-1);
+    }
+    .search-bar input {
+      border: none;
+      outline: none;
+      font-size: 16px;
+      flex: 1;
+      background: transparent;
+      color: var(--md-sys-color-on-surface);
+    }
+    .search-bar .material-symbols-outlined { color: var(--md-sys-color-on-surface-variant); }
+
+    /* Section title */
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .section-header h2 { font-size: 20px; font-weight: 500; }
+    .section-header .count {
+      background: var(--md-sys-color-surface-variant);
+      padding: 2px 10px;
+      border-radius: 12px;
+      font-size: 13px;
+      color: var(--md-sys-color-on-surface-variant);
+    }
+  </style>
+</head>
+<body>
+
+<div class="top-app-bar">
+  <span class="material-symbols-outlined" style="color:var(--md-sys-color-primary)">hub</span>
+  <h1>מאגר ידע</h1>
+  <a href="index.html">
+    <span class="material-symbols-outlined">smart_toy</span>
+    עבור ל-AI
+  </a>
+</div>
+
+<div class="main-layout">
+  <!-- Categories Panel -->
+  <aside class="categories-panel">
+    <h2>קטגוריות</h2>
+    <div id="categoryList"></div>
+    <button class="add-category-btn" onclick="openCategoryDialog()">
+      <span class="material-symbols-outlined" style="font-size:18px">add</span>
+      הוסף קטגוריה
+    </button>
+  </aside>
+
+  <!-- Content -->
+  <main class="content-area">
+    <div class="search-bar">
+      <span class="material-symbols-outlined">search</span>
+      <input type="text" id="searchInput" placeholder="חפש פריטים, קשרים..." oninput="renderItems()" />
+    </div>
+
+    <div class="section-header">
+      <h2 id="sectionTitle">כל הפריטים</h2>
+      <span class="count" id="itemCount">0</span>
+    </div>
+
+    <div class="fab-container">
+      <button class="fab" onclick="openItemDialog()">
+        <span class="material-symbols-outlined">add</span>
+        פריט חדש
+      </button>
+      <button class="fab primary" onclick="exportData()">
+        <span class="material-symbols-outlined">upload</span>
+        ייצוא
+      </button>
+    </div>
+
+    <div class="items-grid" id="itemsGrid"></div>
+  </main>
+</div>
+
+<!-- Add/Edit Item Dialog -->
+<div class="dialog-overlay" id="itemDialog">
+  <div class="dialog">
+    <h2 id="dialogTitle">פריט חדש</h2>
+    <p class="subtitle">הוסף מידע, קשרים וקטגוריה לפריט</p>
+
+    <div class="field-wrapper">
+      <input type="text" id="itemName" placeholder=" " />
+      <label>שם הפריט *</label>
+    </div>
+
+    <div class="field-wrapper">
+      <select id="itemCategory" required>
+        <option value="" disabled selected></option>
+      </select>
+      <label>קטגוריה *</label>
+    </div>
+
+    <div class="field-wrapper">
+      <textarea id="itemContent" placeholder=" "></textarea>
+      <label>תוכן / תיאור</label>
+    </div>
+
+    <div style="margin-bottom:16px">
+      <label style="font-size:12px;color:var(--md-sys-color-on-surface-variant);margin-bottom:6px;display:block">קשרים (הקלד ולחץ Enter)</label>
+      <div class="chips-input-container" id="chipsContainer">
+        <input type="text" id="relationInput" placeholder="הוסף קשר..." onkeydown="handleRelationKey(event)" />
+      </div>
+    </div>
+
+    <div class="dialog-actions">
+      <button class="btn-text" onclick="closeItemDialog()">ביטול</button>
+      <button class="btn-filled" onclick="saveItem()">שמור</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Category Dialog -->
+<div class="dialog-overlay" id="categoryDialog">
+  <div class="dialog" style="max-width:380px">
+    <h2>קטגוריה חדשה</h2>
+    <p class="subtitle">הגדר שם ואייקון לקטגוריה</p>
+    <div class="field-wrapper">
+      <input type="text" id="catName" placeholder=" " />
+      <label>שם הקטגוריה *</label>
+    </div>
+    <div class="field-wrapper">
+      <input type="text" id="catIcon" placeholder=" " value="folder" />
+      <label>Material Icon (אופציונלי)</label>
+    </div>
+    <div class="dialog-actions">
+      <button class="btn-text" onclick="closeCategoryDialog()">ביטול</button>
+      <button class="btn-filled" onclick="saveCategory()">שמור</button>
+    </div>
+  </div>
+</div>
+
+<div class="snackbar" id="snackbar"></div>
+
+<script>
+  const STORAGE_KEY = 'knowledgeBase';
+  const CATEGORY_KEY = 'knowledgeCategories';
+
+  let db = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+  let categories = JSON.parse(localStorage.getItem(CATEGORY_KEY) || '[]');
+  let activeCategory = 'all';
+  let editingId = null;
+  let currentRelations = [];
+
+  // Default categories
+  if (categories.length === 0) {
+    categories = [
+      { id: 'people', name: 'אנשים', icon: 'person' },
+      { id: 'concepts', name: 'מושגים', icon: 'lightbulb' },
+      { id: 'projects', name: 'פרויקטים', icon: 'folder_open' },
+      { id: 'notes', name: 'הערות', icon: 'note' },
+    ];
+    saveCategories();
+  }
+
+  function save() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
+    renderCategories();
+    renderItems();
+    notifyAI();
+  }
+
+  function saveCategories() {
+    localStorage.setItem(CATEGORY_KEY, JSON.stringify(categories));
+  }
+
+  function notifyAI() {
+    localStorage.setItem('kb_updated', Date.now().toString());
+  }
+
+  function renderCategories() {
+    const list = document.getElementById('categoryList');
+    const allCount = db.length;
+    list.innerHTML = `
+      <button class="category-item ${activeCategory === 'all' ? 'active' : ''}" onclick="setCategory('all')">
+        <span class="material-symbols-outlined" style="font-size:20px">apps</span>
+        הכל
+        <span class="badge">${allCount}</span>
+      </button>
+    `;
+    categories.forEach(cat => {
+      const count = db.filter(i => i.category === cat.id).length;
+      list.innerHTML += `
+        <button class="category-item ${activeCategory === cat.id ? 'active' : ''}" onclick="setCategory('${cat.id}')">
+          <span class="material-symbols-outlined" style="font-size:20px">${cat.icon}</span>
+          ${cat.name}
+          <span class="badge">${count}</span>
+        </button>
+      `;
+    });
+  }
+
+  function setCategory(id) {
+    activeCategory = id;
+    const cat = categories.find(c => c.id === id);
+    document.getElementById('sectionTitle').textContent = id === 'all' ? 'כל הפריטים' : (cat ? cat.name : '');
+    renderCategories();
+    renderItems();
+  }
+
+  function renderItems() {
+    const q = document.getElementById('searchInput').value.toLowerCase();
+    let items = activeCategory === 'all' ? db : db.filter(i => i.category === activeCategory);
+    if (q) {
+      items = items.filter(i =>
+        i.name.toLowerCase().includes(q) ||
+        (i.content || '').toLowerCase().includes(q) ||
+        (i.relations || []).some(r => r.toLowerCase().includes(q))
+      );
+    }
+
+    document.getElementById('itemCount').textContent = items.length;
+    const grid = document.getElementById('itemsGrid');
+
+    if (items.length === 0) {
+      grid.innerHTML = `
+        <div class="empty-state">
+          <span class="material-symbols-outlined">inventory_2</span>
+          <p>אין פריטים עדיין. לחץ על "פריט חדש" כדי להתחיל.</p>
+        </div>
+      `;
+      return;
+    }
+
+    grid.innerHTML = items.map(item => {
+      const cat = categories.find(c => c.id === item.category);
+      return `
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon">
+              <span class="material-symbols-outlined" style="color:var(--md-sys-color-primary)">${cat ? cat.icon : 'article'}</span>
+            </div>
+            <div>
+              <div class="card-title">${escHtml(item.name)}</div>
+              <div class="card-category">${cat ? cat.name : ''}</div>
+            </div>
+          </div>
+          ${item.content ? `<div class="card-content">${escHtml(item.content)}</div>` : ''}
+          ${item.relations && item.relations.length ? `
+            <div class="card-relations">
+              ${item.relations.map(r => `<span class="relation-chip">${escHtml(r)}</span>`).join('')}
+            </div>` : ''}
+          <div class="card-actions">
+            <button class="icon-btn" onclick='editItem("${item.id}")' title="ערוך">
+              <span class="material-symbols-outlined" style="font-size:18px">edit</span>
+            </button>
+            <button class="icon-btn danger" onclick='deleteItem("${item.id}")' title="מחק">
+              <span class="material-symbols-outlined" style="font-size:18px">delete</span>
+            </button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function escHtml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  // Item Dialog
+  function openItemDialog(id = null) {
+    editingId = id;
+    currentRelations = [];
+    document.getElementById('dialogTitle').textContent = id ? 'ערוך פריט' : 'פריט חדש';
+    document.getElementById('itemName').value = '';
+    document.getElementById('itemContent').value = '';
+    document.getElementById('itemCategory').value = '';
+
+    // Populate categories
+    const sel = document.getElementById('itemCategory');
+    sel.innerHTML = '<option value="" disabled selected></option>' +
+      categories.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+
+    if (id) {
+      const item = db.find(i => i.id === id);
+      if (item) {
+        document.getElementById('itemName').value = item.name;
+        document.getElementById('itemContent').value = item.content || '';
+        document.getElementById('itemCategory').value = item.category;
+        currentRelations = [...(item.relations || [])];
+      }
+    }
+    renderChips();
+    document.getElementById('itemDialog').classList.add('open');
+    setTimeout(() => document.getElementById('itemName').focus(), 100);
+  }
+
+  function closeItemDialog() {
+    document.getElementById('itemDialog').classList.remove('open');
+    editingId = null;
+    currentRelations = [];
+  }
+
+  function saveItem() {
+    const name = document.getElementById('itemName').value.trim();
+    const category = document.getElementById('itemCategory').value;
+    const content = document.getElementById('itemContent').value.trim();
+
+    if (!name || !category) { showSnack('נא למלא שם וקטגוריה'); return; }
+
+    if (editingId) {
+      const idx = db.findIndex(i => i.id === editingId);
+      if (idx !== -1) {
+        db[idx] = { ...db[idx], name, category, content, relations: [...currentRelations] };
+      }
+    } else {
+      db.push({ id: Date.now().toString(), name, category, content, relations: [...currentRelations], createdAt: new Date().toISOString() });
+    }
+    save();
+    closeItemDialog();
+    showSnack(editingId ? 'פריט עודכן' : 'פריט נוסף');
+  }
+
+  function editItem(id) { openItemDialog(id); }
+
+  function deleteItem(id) {
+    if (!confirm('למחוק פריט זה?')) return;
+    db = db.filter(i => i.id !== id);
+    save();
+    showSnack('פריט נמחק');
+  }
+
+  // Relations chips
+  function handleRelationKey(e) {
+    if (e.key === 'Enter' || e.key === ',') {
+      e.preventDefault();
+      const val = e.target.value.trim();
+      if (val && !currentRelations.includes(val)) {
+        currentRelations.push(val);
+        renderChips();
+      }
+      e.target.value = '';
+    }
+  }
+
+  function removeRelation(r) {
+    currentRelations = currentRelations.filter(x => x !== r);
+    renderChips();
+  }
+
+  function renderChips() {
+    const container = document.getElementById('chipsContainer');
+    const input = document.getElementById('relationInput');
+    container.innerHTML = '';
+    currentRelations.forEach(r => {
+      const chip = document.createElement('span');
+      chip.className = 'chip-tag';
+      chip.innerHTML = `${escHtml(r)}<button onclick="removeRelation('${escHtml(r)}')">&times;</button>`;
+      container.appendChild(chip);
+    });
+    container.appendChild(input);
+    input.oninput = null;
+    input.onkeydown = handleRelationKey;
+  }
+
+  // Category Dialog
+  function openCategoryDialog() {
+    document.getElementById('catName').value = '';
+    document.getElementById('catIcon').value = 'folder';
+    document.getElementById('categoryDialog').classList.add('open');
+    setTimeout(() => document.getElementById('catName').focus(), 100);
+  }
+  function closeCategoryDialog() { document.getElementById('categoryDialog').classList.remove('open'); }
+  function saveCategory() {
+    const name = document.getElementById('catName').value.trim();
+    const icon = document.getElementById('catIcon').value.trim() || 'folder';
+    if (!name) { showSnack('נא להזין שם קטגוריה'); return; }
+    categories.push({ id: Date.now().toString(), name, icon });
+    saveCategories();
+    renderCategories();
+    closeCategoryDialog();
+    showSnack('קטגוריה נוספה');
+  }
+
+  // Export
+  function exportData() {
+    const data = { items: db, categories };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'knowledge-base.json';
+    a.click();
+    showSnack('הנתונים יוצאו');
+  }
+
+  // Snackbar
+  function showSnack(msg) {
+    const s = document.getElementById('snackbar');
+    s.textContent = msg;
+    s.classList.add('show');
+    setTimeout(() => s.classList.remove('show'), 2800);
+  }
+
+  // Close dialogs on overlay click
+  document.getElementById('itemDialog').addEventListener('click', function(e) {
+    if (e.target === this) closeItemDialog();
+  });
+  document.getElementById('categoryDialog').addEventListener('click', function(e) {
+    if (e.target === this) closeCategoryDialog();
+  });
+
+  // Init
+  renderCategories();
+  renderItems();
+</script>
+</body>
+</html>
