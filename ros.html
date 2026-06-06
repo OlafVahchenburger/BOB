@@ -1,0 +1,1477 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ROS - Responsive Operating System</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --md-sys-color-primary: #6750A4;
+    --md-sys-color-on-primary: #FFFFFF;
+    --md-sys-color-primary-container: #EADDFF;
+    --md-sys-color-on-primary-container: #21005D;
+    --md-sys-color-secondary: #625B71;
+    --md-sys-color-on-secondary: #FFFFFF;
+    --md-sys-color-secondary-container: #E8DEF8;
+    --md-sys-color-on-secondary-container: #1D192B;
+    --md-sys-color-tertiary: #7D5260;
+    --md-sys-color-on-tertiary: #FFFFFF;
+    --md-sys-color-tertiary-container: #FFD8E4;
+    --md-sys-color-on-tertiary-container: #31111D;
+    --md-sys-color-error: #B3261E;
+    --md-sys-color-on-error: #FFFFFF;
+    --md-sys-color-error-container: #F9DEDC;
+    --md-sys-color-on-error-container: #410E0B;
+    --md-sys-color-background: #FFFBFE;
+    --md-sys-color-on-background: #1C1B1F;
+    --md-sys-color-surface: #FFFBFE;
+    --md-sys-color-on-surface: #1C1B1F;
+    --md-sys-color-surface-variant: #E7E0EC;
+    --md-sys-color-on-surface-variant: #49454F;
+    --md-sys-color-outline: #79747E;
+    --md-sys-color-outline-variant: #CAC4D0;
+    --md-sys-color-shadow: #000000;
+    --md-sys-color-scrim: #000000;
+    --md-sys-color-inverse-surface: #313033;
+    --md-sys-color-inverse-on-surface: #F4EFF4;
+    --md-sys-color-inverse-primary: #D0BCFF;
+    --md-sys-color-surface-1: color-mix(in srgb, var(--md-sys-color-primary) 5%, var(--md-sys-color-surface));
+    --md-sys-color-surface-2: color-mix(in srgb, var(--md-sys-color-primary) 8%, var(--md-sys-color-surface));
+    --md-sys-color-surface-3: color-mix(in srgb, var(--md-sys-color-primary) 11%, var(--md-sys-color-surface));
+    --md-sys-color-surface-4: color-mix(in srgb, var(--md-sys-color-primary) 12%, var(--md-sys-color-surface));
+    --md-sys-color-surface-5: color-mix(in srgb, var(--md-sys-color-primary) 14%, var(--md-sys-color-surface));
+    --md-ref-typeface-brand: 'Roboto', sans-serif;
+    --md-ref-typeface-plain: 'Roboto', sans-serif;
+    --wallpaper: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    --dark-mode: 0;
+  }
+
+  [data-theme="dark"] {
+    --md-sys-color-primary: #D0BCFF;
+    --md-sys-color-on-primary: #381E72;
+    --md-sys-color-primary-container: #4F378B;
+    --md-sys-color-on-primary-container: #EADDFF;
+    --md-sys-color-secondary: #CCC2DC;
+    --md-sys-color-on-secondary: #332D41;
+    --md-sys-color-secondary-container: #4A4458;
+    --md-sys-color-on-secondary-container: #E8DEF8;
+    --md-sys-color-tertiary: #EFB8C8;
+    --md-sys-color-on-tertiary: #492532;
+    --md-sys-color-tertiary-container: #633B48;
+    --md-sys-color-on-tertiary-container: #FFD8E4;
+    --md-sys-color-error: #F2B8B5;
+    --md-sys-color-on-error: #601410;
+    --md-sys-color-error-container: #8C1D18;
+    --md-sys-color-on-error-container: #F9DEDC;
+    --md-sys-color-background: #1C1B1F;
+    --md-sys-color-on-background: #E6E1E5;
+    --md-sys-color-surface: #1C1B1F;
+    --md-sys-color-on-surface: #E6E1E5;
+    --md-sys-color-surface-variant: #49454F;
+    --md-sys-color-on-surface-variant: #CAC4D0;
+    --md-sys-color-outline: #938F99;
+    --md-sys-color-outline-variant: #49454F;
+    --md-sys-color-inverse-surface: #E6E1E5;
+    --md-sys-color-inverse-on-surface: #313033;
+    --md-sys-color-inverse-primary: #6750A4;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: var(--md-ref-typeface-plain);
+    width: 100vw; height: 100vh;
+    overflow: hidden;
+    background: var(--wallpaper);
+    color: var(--md-sys-color-on-surface);
+    user-select: none;
+  }
+
+  .material-symbols-rounded {
+    font-family: 'Material Symbols Rounded';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ===== DESKTOP ===== */
+  #desktop {
+    width: 100%; height: 100%;
+    position: relative;
+    display: flex; flex-direction: column;
+  }
+
+  #desktop-area {
+    flex: 1;
+    position: relative;
+    padding: 20px;
+    display: flex; flex-wrap: wrap;
+    align-content: flex-start;
+    gap: 8px;
+  }
+
+  .desktop-icon {
+    display: flex; flex-direction: column;
+    align-items: center; gap: 6px;
+    padding: 12px 8px; border-radius: 16px;
+    cursor: pointer; width: 80px;
+    transition: background 0.2s;
+  }
+  .desktop-icon:hover { background: rgba(255,255,255,0.2); }
+  .desktop-icon:active { background: rgba(255,255,255,0.35); }
+  .desktop-icon .icon-bg {
+    width: 56px; height: 56px; border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px; background: var(--md-sys-color-primary-container);
+    color: var(--md-sys-color-on-primary-container);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+  .desktop-icon span.label {
+    font-size: 11px; color: white; text-align: center;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+    line-height: 1.2; max-width: 72px;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+
+  /* ===== TASKBAR ===== */
+  #taskbar {
+    height: 64px;
+    background: color-mix(in srgb, var(--md-sys-color-surface) 85%, transparent);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid var(--md-sys-color-outline-variant);
+    display: flex; align-items: center;
+    padding: 0 16px; gap: 8px;
+    position: relative; z-index: 100;
+  }
+
+  #start-btn {
+    width: 48px; height: 48px; border-radius: 50%;
+    background: var(--md-sys-color-primary);
+    color: var(--md-sys-color-on-primary);
+    border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; transition: all 0.2s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    flex-shrink: 0;
+  }
+  #start-btn:hover { transform: scale(1.08); box-shadow: 0 4px 16px rgba(0,0,0,0.4); }
+  #start-btn:active { transform: scale(0.95); }
+
+  #taskbar-apps {
+    flex: 1; display: flex; align-items: center; gap: 4px;
+    overflow: hidden;
+  }
+
+  .taskbar-item {
+    height: 40px; padding: 0 12px; border-radius: 20px;
+    background: var(--md-sys-color-surface-variant);
+    color: var(--md-sys-color-on-surface-variant);
+    border: none; cursor: pointer;
+    display: flex; align-items: center; gap: 8px;
+    font-size: 13px; font-family: inherit;
+    transition: all 0.2s; max-width: 160px;
+    white-space: nowrap; overflow: hidden;
+  }
+  .taskbar-item:hover { background: var(--md-sys-color-secondary-container); }
+  .taskbar-item.active { background: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container); }
+  .taskbar-item .material-symbols-rounded { font-size: 18px; }
+
+  #taskbar-right {
+    display: flex; align-items: center; gap: 8px; flex-shrink: 0;
+  }
+
+  #clock {
+    text-align: center; cursor: pointer; padding: 4px 12px; border-radius: 12px;
+    transition: background 0.2s;
+  }
+  #clock:hover { background: var(--md-sys-color-surface-variant); }
+  #clock .time { font-size: 16px; font-weight: 500; color: var(--md-sys-color-on-surface); }
+  #clock .date { font-size: 11px; color: var(--md-sys-color-on-surface-variant); }
+
+  .taskbar-icon-btn {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: transparent; border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--md-sys-color-on-surface-variant);
+    font-size: 20px; transition: background 0.2s;
+  }
+  .taskbar-icon-btn:hover { background: var(--md-sys-color-surface-variant); }
+
+  /* ===== WINDOWS ===== */
+  .window {
+    position: absolute;
+    background: var(--md-sys-color-surface);
+    border-radius: 28px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.25), 0 2px 8px rgba(0,0,0,0.15);
+    display: flex; flex-direction: column;
+    overflow: hidden; min-width: 320px; min-height: 200px;
+    border: 1px solid var(--md-sys-color-outline-variant);
+    transition: box-shadow 0.2s;
+  }
+  .window.focused { box-shadow: 0 16px 48px rgba(0,0,0,0.35), 0 4px 16px rgba(0,0,0,0.2); z-index: 50; }
+  .window.minimized { display: none; }
+  .window.maximized { border-radius: 0 !important; top: 0 !important; left: 0 !important; width: 100% !important; height: calc(100% - 64px) !important; }
+
+  .window-titlebar {
+    height: 52px; display: flex; align-items: center;
+    padding: 0 8px 0 16px; gap: 8px;
+    background: var(--md-sys-color-surface-2);
+    cursor: move; flex-shrink: 0;
+    border-bottom: 1px solid var(--md-sys-color-outline-variant);
+  }
+  .window-title-icon { font-size: 20px; color: var(--md-sys-color-primary); }
+  .window-title-text { flex: 1; font-size: 14px; font-weight: 500; }
+  .window-btn {
+    width: 32px; height: 32px; border-radius: 50%;
+    border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; transition: all 0.15s;
+    color: var(--md-sys-color-on-surface-variant);
+  }
+  .window-btn:hover { transform: scale(1.15); }
+  .window-btn.minimize { background: var(--md-sys-color-secondary-container); }
+  .window-btn.maximize { background: var(--md-sys-color-tertiary-container); }
+  .window-btn.close { background: var(--md-sys-color-error-container); color: var(--md-sys-color-error); }
+  .window-btn.close:hover { background: var(--md-sys-color-error); color: var(--md-sys-color-on-error); }
+
+  .window-content {
+    flex: 1; overflow: auto; position: relative;
+    background: var(--md-sys-color-surface);
+  }
+
+  .window-resize {
+    position: absolute; bottom: 0; right: 0;
+    width: 20px; height: 20px; cursor: se-resize;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* ===== APP LAUNCHER ===== */
+  #launcher {
+    position: absolute; bottom: 72px; left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: color-mix(in srgb, var(--md-sys-color-surface) 92%, transparent);
+    backdrop-filter: blur(24px);
+    border-radius: 28px;
+    padding: 24px;
+    width: 480px; max-height: 520px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    border: 1px solid var(--md-sys-color-outline-variant);
+    z-index: 200;
+    display: none; flex-direction: column; gap: 16px;
+    opacity: 0; transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  #launcher.open {
+    display: flex; opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  #launcher-search {
+    display: flex; align-items: center; gap: 12px;
+    background: var(--md-sys-color-surface-variant);
+    border-radius: 50px; padding: 12px 20px;
+  }
+  #launcher-search input {
+    flex: 1; background: transparent; border: none; outline: none;
+    font-family: inherit; font-size: 16px;
+    color: var(--md-sys-color-on-surface);
+  }
+  #launcher-search input::placeholder { color: var(--md-sys-color-on-surface-variant); }
+
+  #launcher-grid {
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px;
+    overflow-y: auto; max-height: 360px;
+  }
+
+  .launcher-app {
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    padding: 12px 4px; border-radius: 16px; cursor: pointer;
+    transition: background 0.15s;
+  }
+  .launcher-app:hover { background: var(--md-sys-color-surface-variant); }
+  .launcher-app:active { background: var(--md-sys-color-secondary-container); }
+  .launcher-app .app-icon {
+    width: 52px; height: 52px; border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px;
+  }
+  .launcher-app .app-name {
+    font-size: 11px; text-align: center; line-height: 1.2;
+    color: var(--md-sys-color-on-surface);
+    max-width: 64px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+
+  /* ===== NOTIFICATION PANEL ===== */
+  #notif-panel {
+    position: absolute; top: 8px; right: 8px;
+    width: 360px; max-height: 80vh;
+    background: color-mix(in srgb, var(--md-sys-color-surface) 92%, transparent);
+    backdrop-filter: blur(20px);
+    border-radius: 28px;
+    padding: 20px; gap: 12px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+    border: 1px solid var(--md-sys-color-outline-variant);
+    z-index: 150; display: none; flex-direction: column;
+  }
+  #notif-panel.open { display: flex; }
+
+  .notif-header {
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 14px; font-weight: 500;
+  }
+
+  .notif-card {
+    background: var(--md-sys-color-surface-1);
+    border-radius: 16px; padding: 16px;
+    border: 1px solid var(--md-sys-color-outline-variant);
+  }
+  .notif-card .notif-title { font-size: 13px; font-weight: 500; margin-bottom: 4px; }
+  .notif-card .notif-body { font-size: 12px; color: var(--md-sys-color-on-surface-variant); }
+
+  /* Quick Settings */
+  .quick-tiles {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+  }
+  .quick-tile {
+    background: var(--md-sys-color-surface-variant);
+    border-radius: 16px; padding: 12px;
+    display: flex; flex-direction: column; gap: 4px;
+    cursor: pointer; transition: background 0.15s;
+  }
+  .quick-tile.active { background: var(--md-sys-color-secondary-container); color: var(--md-sys-color-on-secondary-container); }
+  .quick-tile:hover { filter: brightness(0.95); }
+  .quick-tile .material-symbols-rounded { font-size: 20px; }
+  .quick-tile .tile-label { font-size: 11px; font-weight: 500; }
+
+  .slider-row {
+    display: flex; align-items: center; gap: 12px;
+  }
+  .slider-row input[type=range] {
+    flex: 1; height: 4px; border-radius: 2px;
+    appearance: none; background: var(--md-sys-color-outline-variant);
+    cursor: pointer;
+  }
+  .slider-row input[type=range]::-webkit-slider-thumb {
+    appearance: none; width: 20px; height: 20px;
+    border-radius: 50%; background: var(--md-sys-color-primary);
+  }
+
+  /* ===== APPS ===== */
+
+  /* File Manager */
+  .file-manager { display: flex; height: 100%; }
+  .file-sidebar {
+    width: 200px; padding: 8px;
+    border-right: 1px solid var(--md-sys-color-outline-variant);
+    display: flex; flex-direction: column; gap: 2px;
+  }
+  .sidebar-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 16px; border-radius: 50px; cursor: pointer;
+    font-size: 14px; color: var(--md-sys-color-on-surface-variant);
+    transition: background 0.15s;
+  }
+  .sidebar-item:hover { background: var(--md-sys-color-surface-variant); }
+  .sidebar-item.active { background: var(--md-sys-color-secondary-container); color: var(--md-sys-color-on-secondary-container); font-weight: 500; }
+  .sidebar-item .material-symbols-rounded { font-size: 20px; }
+  .file-main { flex: 1; padding: 16px; overflow: auto; }
+  .file-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 8px; }
+  .file-item {
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    padding: 12px 8px; border-radius: 16px; cursor: pointer;
+    transition: background 0.15s;
+  }
+  .file-item:hover { background: var(--md-sys-color-surface-variant); }
+  .file-item .material-symbols-rounded { font-size: 40px; color: var(--md-sys-color-primary); }
+  .file-item .file-name { font-size: 12px; text-align: center; color: var(--md-sys-color-on-surface); }
+
+  /* Calculator */
+  .calculator {
+    display: flex; flex-direction: column; height: 100%;
+    padding: 16px; gap: 8px;
+  }
+  .calc-display {
+    background: var(--md-sys-color-surface-variant);
+    border-radius: 20px; padding: 20px 24px;
+    text-align: right; margin-bottom: 8px;
+  }
+  .calc-expr { font-size: 14px; color: var(--md-sys-color-on-surface-variant); min-height: 20px; }
+  .calc-result { font-size: 40px; font-weight: 300; color: var(--md-sys-color-on-surface); }
+  .calc-btns { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; flex: 1; }
+  .calc-btn {
+    border: none; border-radius: 50px; cursor: pointer;
+    font-size: 18px; font-family: inherit; font-weight: 400;
+    transition: all 0.1s; display: flex; align-items: center; justify-content: center;
+  }
+  .calc-btn:active { transform: scale(0.93); }
+  .calc-btn.num { background: var(--md-sys-color-surface-3); color: var(--md-sys-color-on-surface); }
+  .calc-btn.op { background: var(--md-sys-color-secondary-container); color: var(--md-sys-color-on-secondary-container); }
+  .calc-btn.eq { background: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary); }
+  .calc-btn.fn { background: var(--md-sys-color-surface-variant); color: var(--md-sys-color-on-surface-variant); font-size: 14px; }
+  .calc-btn:hover { filter: brightness(0.9); }
+
+  /* Text Editor */
+  .text-editor { display: flex; flex-direction: column; height: 100%; }
+  .editor-toolbar {
+    display: flex; align-items: center; gap: 4px;
+    padding: 8px 12px; border-bottom: 1px solid var(--md-sys-color-outline-variant);
+    background: var(--md-sys-color-surface-2);
+  }
+  .tool-btn {
+    width: 36px; height: 36px; border-radius: 8px;
+    border: none; cursor: pointer; background: transparent;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--md-sys-color-on-surface-variant);
+    font-size: 18px; transition: background 0.15s;
+  }
+  .tool-btn:hover { background: var(--md-sys-color-surface-variant); }
+  .tool-sep { width: 1px; height: 24px; background: var(--md-sys-color-outline-variant); margin: 0 4px; }
+  #text-area {
+    flex: 1; padding: 20px 24px;
+    border: none; outline: none; resize: none;
+    font-family: inherit; font-size: 15px; line-height: 1.6;
+    background: var(--md-sys-color-surface);
+    color: var(--md-sys-color-on-surface);
+  }
+
+  /* Browser */
+  .browser { display: flex; flex-direction: column; height: 100%; }
+  .browser-bar {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 12px; border-bottom: 1px solid var(--md-sys-color-outline-variant);
+    background: var(--md-sys-color-surface-2);
+  }
+  .browser-nav-btn {
+    width: 36px; height: 36px; border-radius: 50%;
+    border: none; cursor: pointer; background: transparent;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--md-sys-color-on-surface-variant); font-size: 20px;
+    transition: background 0.15s;
+  }
+  .browser-nav-btn:hover { background: var(--md-sys-color-surface-variant); }
+  .url-bar {
+    flex: 1; padding: 8px 16px; border-radius: 50px;
+    background: var(--md-sys-color-surface-variant);
+    border: none; outline: none; font-family: inherit; font-size: 14px;
+    color: var(--md-sys-color-on-surface);
+  }
+  .browser-content {
+    flex: 1; display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 24px;
+    background: var(--md-sys-color-surface);
+    padding: 32px;
+  }
+  .browser-logo { font-size: 48px; font-weight: 300; color: var(--md-sys-color-primary); }
+  .browser-shortcuts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; width: 100%; max-width: 480px; }
+  .browser-shortcut {
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    padding: 16px; border-radius: 16px; cursor: pointer;
+    background: var(--md-sys-color-surface-1);
+    border: 1px solid var(--md-sys-color-outline-variant);
+    transition: background 0.15s;
+  }
+  .browser-shortcut:hover { background: var(--md-sys-color-surface-2); }
+  .browser-shortcut .material-symbols-rounded { font-size: 28px; color: var(--md-sys-color-primary); }
+  .browser-shortcut span { font-size: 12px; color: var(--md-sys-color-on-surface-variant); }
+
+  /* Settings */
+  .settings-app { display: flex; height: 100%; }
+  .settings-nav {
+    width: 220px; padding: 8px;
+    border-right: 1px solid var(--md-sys-color-outline-variant);
+    display: flex; flex-direction: column; gap: 2px; overflow-y: auto;
+  }
+  .settings-content { flex: 1; overflow-y: auto; padding: 24px; }
+  .settings-group { margin-bottom: 24px; }
+  .settings-group-title {
+    font-size: 12px; font-weight: 500; letter-spacing: 0.5px;
+    color: var(--md-sys-color-primary); text-transform: uppercase;
+    margin-bottom: 8px; padding: 0 4px;
+  }
+  .settings-item {
+    display: flex; align-items: center; gap: 16px;
+    padding: 16px; border-radius: 16px; cursor: pointer;
+    background: var(--md-sys-color-surface-1);
+    border: 1px solid var(--md-sys-color-outline-variant);
+    margin-bottom: 4px; transition: background 0.15s;
+  }
+  .settings-item:hover { background: var(--md-sys-color-surface-2); }
+  .settings-item .material-symbols-rounded { font-size: 24px; color: var(--md-sys-color-primary); }
+  .settings-item-text { flex: 1; }
+  .settings-item-text .title { font-size: 14px; font-weight: 500; }
+  .settings-item-text .subtitle { font-size: 12px; color: var(--md-sys-color-on-surface-variant); }
+
+  /* Toggle switch */
+  .toggle {
+    width: 52px; height: 32px; border-radius: 16px;
+    background: var(--md-sys-color-outline);
+    position: relative; cursor: pointer; transition: background 0.2s;
+    flex-shrink: 0;
+  }
+  .toggle.on { background: var(--md-sys-color-primary); }
+  .toggle::after {
+    content: ''; position: absolute;
+    width: 24px; height: 24px; border-radius: 50%;
+    background: var(--md-sys-color-surface);
+    top: 4px; left: 4px; transition: transform 0.2s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  }
+  .toggle.on::after { transform: translateX(20px); }
+
+  /* Color Picker for themes */
+  .color-swatches { display: flex; gap: 8px; flex-wrap: wrap; }
+  .color-swatch {
+    width: 40px; height: 40px; border-radius: 50%; cursor: pointer;
+    border: 3px solid transparent; transition: all 0.15s;
+  }
+  .color-swatch.selected { border-color: var(--md-sys-color-on-surface); transform: scale(1.15); }
+
+  /* Terminal */
+  .terminal { height: 100%; display: flex; flex-direction: column; }
+  .terminal-output {
+    flex: 1; background: #1a1a2e; color: #00ff88;
+    font-family: 'Roboto Mono', 'Courier New', monospace;
+    font-size: 13px; padding: 16px; overflow-y: auto;
+    line-height: 1.6;
+  }
+  .terminal-line { margin-bottom: 2px; }
+  .terminal-line.cmd { color: #7dd3fc; }
+  .terminal-line.err { color: #f87171; }
+  .terminal-input-row {
+    display: flex; align-items: center; gap: 8px;
+    background: #16213e; padding: 8px 16px;
+    border-top: 1px solid #00ff8833;
+  }
+  .terminal-prompt { color: #00ff88; font-family: monospace; font-size: 13px; white-space: nowrap; }
+  #terminal-input {
+    flex: 1; background: transparent; border: none; outline: none;
+    color: #e2e8f0; font-family: monospace; font-size: 13px;
+  }
+
+  /* Music Player */
+  .music-player {
+    display: flex; flex-direction: column; align-items: center;
+    padding: 32px; gap: 24px; height: 100%;
+  }
+  .album-art {
+    width: 200px; height: 200px; border-radius: 24px;
+    background: var(--md-sys-color-primary-container);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 80px; box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  }
+  .song-info { text-align: center; }
+  .song-title { font-size: 20px; font-weight: 500; }
+  .song-artist { font-size: 14px; color: var(--md-sys-color-on-surface-variant); margin-top: 4px; }
+  .progress-bar {
+    width: 100%; display: flex; flex-direction: column; gap: 4px;
+  }
+  .progress-track {
+    height: 4px; background: var(--md-sys-color-outline-variant);
+    border-radius: 2px; overflow: hidden; cursor: pointer;
+  }
+  .progress-fill {
+    height: 100%; background: var(--md-sys-color-primary);
+    border-radius: 2px; width: 35%;
+    transition: width 1s linear;
+  }
+  .progress-times { display: flex; justify-content: space-between; font-size: 12px; color: var(--md-sys-color-on-surface-variant); }
+  .music-controls { display: flex; align-items: center; gap: 8px; }
+  .ctrl-btn {
+    border: none; border-radius: 50%; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+  }
+  .ctrl-btn.sm { width: 40px; height: 40px; background: transparent; color: var(--md-sys-color-on-surface-variant); font-size: 22px; }
+  .ctrl-btn.lg { width: 56px; height: 56px; background: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary); font-size: 28px; }
+  .ctrl-btn:hover { filter: brightness(0.9); transform: scale(1.05); }
+  .ctrl-btn:active { transform: scale(0.92); }
+
+  /* Gallery */
+  .gallery { padding: 16px; overflow-y: auto; height: 100%; }
+  .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; }
+  .gallery-item {
+    aspect-ratio: 1; border-radius: 16px; overflow: hidden;
+    cursor: pointer; transition: transform 0.2s;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 48px;
+  }
+  .gallery-item:hover { transform: scale(1.03); }
+
+  /* Calendar */
+  .calendar-app { padding: 20px; height: 100%; overflow-y: auto; }
+  .cal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .cal-title { font-size: 18px; font-weight: 500; }
+  .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+  .cal-day-label { text-align: center; font-size: 12px; font-weight: 500; color: var(--md-sys-color-on-surface-variant); padding: 8px 0; }
+  .cal-day {
+    aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+    border-radius: 50%; cursor: pointer; font-size: 14px;
+    transition: background 0.15s;
+  }
+  .cal-day:hover { background: var(--md-sys-color-surface-variant); }
+  .cal-day.today { background: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary); font-weight: 500; }
+  .cal-day.other-month { color: var(--md-sys-color-outline); }
+
+  /* ===== CONTEXT MENU ===== */
+  #context-menu {
+    position: absolute; z-index: 300;
+    background: var(--md-sys-color-surface);
+    border-radius: 16px;
+    padding: 8px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.25);
+    border: 1px solid var(--md-sys-color-outline-variant);
+    min-width: 180px; display: none;
+  }
+  .ctx-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 16px; border-radius: 8px; cursor: pointer;
+    font-size: 14px; color: var(--md-sys-color-on-surface);
+    transition: background 0.1s;
+  }
+  .ctx-item:hover { background: var(--md-sys-color-surface-variant); }
+  .ctx-item .material-symbols-rounded { font-size: 18px; color: var(--md-sys-color-on-surface-variant); }
+  .ctx-sep { height: 1px; background: var(--md-sys-color-outline-variant); margin: 4px 0; }
+
+  /* ===== WALLPAPER OVERLAY ===== */
+  #wallpaper-layer {
+    position: absolute; inset: 0; z-index: -1;
+    background: var(--wallpaper);
+    transition: background 0.5s;
+  }
+
+  /* Toast notifications */
+  #toast-container {
+    position: absolute; bottom: 80px; left: 50%;
+    transform: translateX(-50%);
+    display: flex; flex-direction: column; gap: 8px;
+    z-index: 400; align-items: center;
+  }
+  .toast {
+    background: var(--md-sys-color-inverse-surface);
+    color: var(--md-sys-color-inverse-on-surface);
+    padding: 12px 20px; border-radius: 50px;
+    font-size: 14px; white-space: nowrap;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+    animation: toastIn 0.3s ease;
+  }
+  @keyframes toastIn {
+    from { opacity: 0; transform: translateY(16px) scale(0.9); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--md-sys-color-outline-variant); border-radius: 3px; }
+
+  /* Ripple */
+  .ripple { position: relative; overflow: hidden; }
+  .ripple-effect {
+    position: absolute; border-radius: 50%;
+    background: rgba(255,255,255,0.3);
+    transform: scale(0); animation: ripple 0.5s linear;
+    pointer-events: none;
+  }
+  @keyframes ripple { to { transform: scale(4); opacity: 0; } }
+
+  /* Lock Screen */
+  #lock-screen {
+    position: absolute; inset: 0; z-index: 1000;
+    background: var(--wallpaper);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 32px; cursor: pointer;
+  }
+  #lock-screen.hidden { display: none; }
+  .lock-time { font-size: 80px; font-weight: 200; color: white; text-shadow: 0 2px 16px rgba(0,0,0,0.4); }
+  .lock-date { font-size: 20px; color: rgba(255,255,255,0.85); font-weight: 300; }
+  .lock-hint { font-size: 14px; color: rgba(255,255,255,0.65); }
+  .lock-avatar {
+    width: 80px; height: 80px; border-radius: 50%;
+    background: var(--md-sys-color-primary); display: flex; align-items: center; justify-content: center;
+    font-size: 40px; color: white;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  }
+</style>
+</head>
+<body>
+
+<!-- Lock Screen -->
+<div id="lock-screen" onclick="unlock()">
+  <div class="lock-time" id="lock-time">00:00</div>
+  <div class="lock-date" id="lock-date"></div>
+  <div class="lock-avatar"><span class="material-symbols-rounded">person</span></div>
+  <div class="lock-hint">לחץ לפתיחה</div>
+</div>
+
+<!-- Desktop -->
+<div id="desktop">
+  <div id="wallpaper-layer"></div>
+
+  <!-- Desktop Area -->
+  <div id="desktop-area" oncontextmenu="showCtxMenu(event)">
+    <!-- Desktop icons injected by JS -->
+  </div>
+
+  <!-- Taskbar -->
+  <div id="taskbar">
+    <button id="start-btn" onclick="toggleLauncher()" class="ripple" title="פתח תפריט">
+      <span class="material-symbols-rounded">apps</span>
+    </button>
+    <div id="taskbar-apps"></div>
+    <div id="taskbar-right">
+      <button class="taskbar-icon-btn" onclick="toggleNotif()" title="התראות">
+        <span class="material-symbols-rounded">notifications</span>
+      </button>
+      <div id="clock" onclick="openApp('calendar')">
+        <div class="time" id="taskbar-time">00:00</div>
+        <div class="date" id="taskbar-date">-</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- App Launcher -->
+  <div id="launcher">
+    <div id="launcher-search">
+      <span class="material-symbols-rounded" style="color:var(--md-sys-color-on-surface-variant)">search</span>
+      <input type="text" placeholder="חפש אפליקציה..." id="search-input" oninput="filterApps(this.value)">
+    </div>
+    <div id="launcher-grid"></div>
+  </div>
+
+  <!-- Notification Panel -->
+  <div id="notif-panel">
+    <div class="notif-header">
+      <span>הגדרות מהירות</span>
+      <button class="taskbar-icon-btn" onclick="toggleNotif()" style="width:28px;height:28px">
+        <span class="material-symbols-rounded" style="font-size:18px">close</span>
+      </button>
+    </div>
+    <div class="quick-tiles">
+      <div class="quick-tile active" onclick="toggleTile(this)" id="tile-wifi">
+        <span class="material-symbols-rounded">wifi</span>
+        <span class="tile-label">Wi-Fi</span>
+      </div>
+      <div class="quick-tile active" onclick="toggleTile(this)" id="tile-bt">
+        <span class="material-symbols-rounded">bluetooth</span>
+        <span class="tile-label">בלוטות'</span>
+      </div>
+      <div class="quick-tile" onclick="toggleTile(this);toggleDark(this)" id="tile-dark">
+        <span class="material-symbols-rounded">dark_mode</span>
+        <span class="tile-label">מצב לילה</span>
+      </div>
+      <div class="quick-tile active" onclick="toggleTile(this)">
+        <span class="material-symbols-rounded">volume_up</span>
+        <span class="tile-label">צליל</span>
+      </div>
+      <div class="quick-tile" onclick="toggleTile(this)">
+        <span class="material-symbols-rounded">airplane_ticket</span>
+        <span class="tile-label">מטוס</span>
+      </div>
+      <div class="quick-tile active" onclick="toggleTile(this)">
+        <span class="material-symbols-rounded">location_on</span>
+        <span class="tile-label">מיקום</span>
+      </div>
+    </div>
+    <div class="slider-row">
+      <span class="material-symbols-rounded" style="font-size:20px;color:var(--md-sys-color-on-surface-variant)">brightness_6</span>
+      <input type="range" min="0" max="100" value="80">
+    </div>
+    <div class="slider-row">
+      <span class="material-symbols-rounded" style="font-size:20px;color:var(--md-sys-color-on-surface-variant)">volume_up</span>
+      <input type="range" min="0" max="100" value="60">
+    </div>
+    <div style="border-top:1px solid var(--md-sys-color-outline-variant);padding-top:12px">
+      <div class="notif-header" style="margin-bottom:12px"><span>התראות</span></div>
+      <div id="notifications-list">
+        <div class="notif-card">
+          <div class="notif-title">ברוכים הבאים ל-ROS!</div>
+          <div class="notif-body">מערכת הפעלה מבוססת Material 3. לחץ על אפליקציות לפתיחה.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Context Menu -->
+  <div id="context-menu">
+    <div class="ctx-item" onclick="changeWallpaper()"><span class="material-symbols-rounded">wallpaper</span>שנה טפט</div>
+    <div class="ctx-item" onclick="openApp('settings')"><span class="material-symbols-rounded">settings</span>הגדרות</div>
+    <div class="ctx-sep"></div>
+    <div class="ctx-item" onclick="openApp('files')"><span class="material-symbols-rounded">folder</span>פתח סייר קבצים</div>
+    <div class="ctx-item" onclick="openApp('terminal')"><span class="material-symbols-rounded">terminal</span>פתח טרמינל</div>
+    <div class="ctx-sep"></div>
+    <div class="ctx-item" onclick="lockScreen()"><span class="material-symbols-rounded">lock</span>נעל מסך</div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast-container"></div>
+</div>
+
+<script>
+// ===== APPS REGISTRY =====
+const APPS = [
+  { id:'files', name:'סייר קבצים', icon:'folder', color:'#E8DEF8', iconColor:'#6750A4' },
+  { id:'browser', name:'דפדפן', icon:'language', color:'#D0E4FF', iconColor:'#1565C0' },
+  { id:'text', name:'עורך טקסט', icon:'edit_note', color:'#DCF5E7', iconColor:'#1B5E20' },
+  { id:'calculator', name:'מחשבון', icon:'calculate', color:'#FFF3CD', iconColor:'#E65100' },
+  { id:'settings', name:'הגדרות', icon:'settings', color:'#F3E5F5', iconColor:'#4A148C' },
+  { id:'terminal', name:'טרמינל', icon:'terminal', color:'#1a1a2e', iconColor:'#00ff88' },
+  { id:'music', name:'מוסיקה', icon:'music_note', color:'#FCE4EC', iconColor:'#880E4F' },
+  { id:'gallery', name:'גלריה', icon:'photo_library', color:'#E1F5FE', iconColor:'#01579B' },
+  { id:'calendar', name:'לוח שנה', icon:'calendar_month', color:'#E8F5E9', iconColor:'#1B5E20' },
+  { id:'mail', name:'דואר', icon:'mail', color:'#FFF8E1', iconColor:'#F57F17' },
+];
+
+const wallpapers = [
+  'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)',
+  'linear-gradient(135deg, #0f0c29, #302b63, #24243e)',
+  'linear-gradient(135deg, #11998e 0%, #38ef7d 100%)',
+  'linear-gradient(135deg, #fc4a1a 0%, #f7b733 100%)',
+  'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
+  'linear-gradient(135deg, #c94b4b 0%, #4b134f 100%)',
+  'linear-gradient(135deg, #005C97 0%, #363795 100%)',
+  'linear-gradient(135deg, #134E5E 0%, #71B280 100%)',
+];
+let wallIdx = 0;
+let windows = {};
+let zCounter = 10;
+let taskbarItems = {};
+
+// ===== CLOCK =====
+function updateClock() {
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString('he-IL', { hour:'2-digit', minute:'2-digit' });
+  const dateStr = now.toLocaleDateString('he-IL', { weekday:'short', day:'numeric', month:'short' });
+  document.getElementById('taskbar-time').textContent = timeStr;
+  document.getElementById('taskbar-date').textContent = dateStr;
+  document.getElementById('lock-time').textContent = now.toLocaleTimeString('he-IL', { hour:'2-digit', minute:'2-digit' });
+  document.getElementById('lock-date').textContent = now.toLocaleDateString('he-IL', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+}
+updateClock();
+setInterval(updateClock, 1000);
+
+// ===== LOCK SCREEN =====
+function unlock() {
+  document.getElementById('lock-screen').classList.add('hidden');
+  showToast('ברוכים הבאים ל-ROS! 🚀');
+}
+function lockScreen() {
+  document.getElementById('lock-screen').classList.remove('hidden');
+  closeContextMenu();
+}
+
+// ===== DESKTOP ICONS =====
+function buildDesktop() {
+  const area = document.getElementById('desktop-area');
+  APPS.forEach(app => {
+    const el = document.createElement('div');
+    el.className = 'desktop-icon';
+    el.ondblclick = () => openApp(app.id);
+    el.innerHTML = `
+      <div class="icon-bg" style="background:${app.color};color:${app.iconColor}">
+        <span class="material-symbols-rounded" style="font-variation-settings:'FILL' 1">${app.icon}</span>
+      </div>
+      <span class="label">${app.name}</span>
+    `;
+    area.appendChild(el);
+  });
+}
+buildDesktop();
+
+// ===== LAUNCHER =====
+function buildLauncher() {
+  const grid = document.getElementById('launcher-grid');
+  APPS.forEach(app => {
+    const el = document.createElement('div');
+    el.className = 'launcher-app';
+    el.dataset.name = app.name;
+    el.onclick = () => { openApp(app.id); closeLauncher(); };
+    el.innerHTML = `
+      <div class="app-icon" style="background:${app.color};color:${app.iconColor}">
+        <span class="material-symbols-rounded" style="font-variation-settings:'FILL' 1">${app.icon}</span>
+      </div>
+      <span class="app-name">${app.name}</span>
+    `;
+    grid.appendChild(el);
+  });
+}
+buildLauncher();
+
+function toggleLauncher() {
+  const l = document.getElementById('launcher');
+  l.classList.toggle('open');
+  if (l.classList.contains('open')) {
+    setTimeout(() => document.getElementById('search-input').focus(), 100);
+  }
+}
+function closeLauncher() {
+  document.getElementById('launcher').classList.remove('open');
+}
+function filterApps(q) {
+  const items = document.querySelectorAll('.launcher-app');
+  items.forEach(item => {
+    item.style.display = item.dataset.name.includes(q) ? '' : 'none';
+  });
+}
+
+// ===== WINDOWS =====
+function openApp(id) {
+  const app = APPS.find(a => a.id === id);
+  if (!app) return;
+  if (windows[id]) {
+    const win = document.getElementById('win-' + id);
+    if (win) {
+      win.classList.remove('minimized');
+      focusWindow(id);
+      return;
+    }
+  }
+
+  const win = document.createElement('div');
+  win.className = 'window';
+  win.id = 'win-' + id;
+  win.style.cssText = `width:${getDefaultSize(id).w}px;height:${getDefaultSize(id).h}px;top:${60 + Math.random()*80}px;left:${80 + Math.random()*120}px;z-index:${++zCounter}`;
+  win.innerHTML = `
+    <div class="window-titlebar" onmousedown="startDrag(event,'${id}')">
+      <span class="material-symbols-rounded window-title-icon" style="color:${app.iconColor};font-variation-settings:'FILL' 1">${app.icon}</span>
+      <span class="window-title-text">${app.name}</span>
+      <button class="window-btn minimize" onclick="minimizeWindow('${id}')" title="מזעור">
+        <span class="material-symbols-rounded" style="font-size:14px">remove</span>
+      </button>
+      <button class="window-btn maximize" onclick="maximizeWindow('${id}')" title="הגדלה">
+        <span class="material-symbols-rounded" style="font-size:14px">crop_square</span>
+      </button>
+      <button class="window-btn close" onclick="closeWindow('${id}')" title="סגור">
+        <span class="material-symbols-rounded" style="font-size:14px">close</span>
+      </button>
+    </div>
+    <div class="window-content" id="content-${id}">
+      ${buildAppContent(id)}
+    </div>
+    <div class="window-resize" onmousedown="startResize(event,'${id}')">
+      <span class="material-symbols-rounded" style="font-size:14px;color:var(--md-sys-color-outline)">drag_indicator</span>
+    </div>
+  `;
+  document.getElementById('desktop-area').appendChild(win);
+  win.onclick = () => focusWindow(id);
+  windows[id] = true;
+  addTaskbarItem(id, app);
+  focusWindow(id);
+  if (id === 'terminal') initTerminal();
+  if (id === 'calendar') buildCalendar();
+  if (id === 'music') startMusic();
+}
+
+function getDefaultSize(id) {
+  const sizes = {
+    calculator: { w: 320, h: 520 },
+    terminal: { w: 560, h: 400 },
+    music: { w: 360, h: 520 },
+    gallery: { w: 580, h: 460 },
+    calendar: { w: 380, h: 440 },
+    settings: { w: 600, h: 500 },
+    files: { w: 580, h: 460 },
+  };
+  return sizes[id] || { w: 640, h: 480 };
+}
+
+function buildAppContent(id) {
+  switch (id) {
+    case 'files': return buildFileManager();
+    case 'browser': return buildBrowser();
+    case 'text': return buildTextEditor();
+    case 'calculator': return buildCalculator();
+    case 'settings': return buildSettings();
+    case 'terminal': return buildTerminal();
+    case 'music': return buildMusicPlayer();
+    case 'gallery': return buildGallery();
+    case 'calendar': return `<div class="calendar-app" id="calendar-content"></div>`;
+    case 'mail': return buildMail();
+    default: return '<div style="padding:32px;text-align:center;color:var(--md-sys-color-on-surface-variant)">אפליקציה בפיתוח...</div>';
+  }
+}
+
+function focusWindow(id) {
+  document.querySelectorAll('.window').forEach(w => w.classList.remove('focused'));
+  const win = document.getElementById('win-' + id);
+  if (win) { win.classList.add('focused'); win.style.zIndex = ++zCounter; }
+  document.querySelectorAll('.taskbar-item').forEach(t => t.classList.remove('active'));
+  const tb = document.getElementById('tb-' + id);
+  if (tb) tb.classList.add('active');
+}
+
+function minimizeWindow(id) {
+  document.getElementById('win-' + id)?.classList.toggle('minimized');
+}
+
+function maximizeWindow(id) {
+  document.getElementById('win-' + id)?.classList.toggle('maximized');
+}
+
+function closeWindow(id) {
+  document.getElementById('win-' + id)?.remove();
+  document.getElementById('tb-' + id)?.remove();
+  delete windows[id];
+}
+
+// ===== TASKBAR =====
+function addTaskbarItem(id, app) {
+  if (document.getElementById('tb-' + id)) return;
+  const btn = document.createElement('button');
+  btn.className = 'taskbar-item';
+  btn.id = 'tb-' + id;
+  btn.onclick = () => {
+    const win = document.getElementById('win-' + id);
+    if (!win) return;
+    if (win.classList.contains('minimized')) { win.classList.remove('minimized'); focusWindow(id); }
+    else if (win.classList.contains('focused')) minimizeWindow(id);
+    else focusWindow(id);
+  };
+  btn.innerHTML = `<span class="material-symbols-rounded" style="font-variation-settings:'FILL' 1">${app.icon}</span>${app.name}`;
+  document.getElementById('taskbar-apps').appendChild(btn);
+}
+
+// ===== DRAG =====
+let dragState = null;
+function startDrag(e, id) {
+  if (e.target.closest('.window-btn')) return;
+  const win = document.getElementById('win-' + id);
+  if (win.classList.contains('maximized')) return;
+  focusWindow(id);
+  dragState = { id, startX: e.clientX, startY: e.clientY,
+    origLeft: parseInt(win.style.left), origTop: parseInt(win.style.top) };
+  e.preventDefault();
+}
+document.addEventListener('mousemove', e => {
+  if (dragState) {
+    const win = document.getElementById('win-' + dragState.id);
+    if (win) {
+      win.style.left = (dragState.origLeft + e.clientX - dragState.startX) + 'px';
+      win.style.top = Math.max(0, dragState.origTop + e.clientY - dragState.startY) + 'px';
+    }
+  }
+  if (resizeState) {
+    const win = document.getElementById('win-' + resizeState.id);
+    if (win) {
+      win.style.width = Math.max(320, resizeState.origW + e.clientX - resizeState.startX) + 'px';
+      win.style.height = Math.max(200, resizeState.origH + e.clientY - resizeState.startY) + 'px';
+    }
+  }
+});
+document.addEventListener('mouseup', () => { dragState = null; resizeState = null; });
+
+// ===== RESIZE =====
+let resizeState = null;
+function startResize(e, id) {
+  const win = document.getElementById('win-' + id);
+  resizeState = { id, startX: e.clientX, startY: e.clientY,
+    origW: win.offsetWidth, origH: win.offsetHeight };
+  e.preventDefault(); e.stopPropagation();
+}
+
+// ===== CONTEXT MENU =====
+function showCtxMenu(e) {
+  e.preventDefault();
+  const m = document.getElementById('context-menu');
+  m.style.display = 'block';
+  m.style.left = Math.min(e.clientX, window.innerWidth - 200) + 'px';
+  m.style.top = Math.min(e.clientY, window.innerHeight - 200) + 'px';
+}
+function closeContextMenu() { document.getElementById('context-menu').style.display = 'none'; }
+document.addEventListener('click', closeContextMenu);
+
+// ===== NOTIFICATIONS =====
+function toggleNotif() {
+  document.getElementById('notif-panel').classList.toggle('open');
+  closeLauncher();
+}
+function toggleTile(el) { el.classList.toggle('active'); }
+function toggleDark(el) {
+  document.documentElement.dataset.theme = el.classList.contains('active') ? 'dark' : '';
+}
+
+// ===== WALLPAPER =====
+function changeWallpaper() {
+  wallIdx = (wallIdx + 1) % wallpapers.length;
+  document.getElementById('wallpaper-layer').style.background = wallpapers[wallIdx];
+  document.documentElement.style.setProperty('--wallpaper', wallpapers[wallIdx]);
+  showToast('טפט שונה');
+}
+
+// ===== TOAST =====
+function showToast(msg) {
+  const c = document.getElementById('toast-container');
+  const t = document.createElement('div');
+  t.className = 'toast'; t.textContent = msg;
+  c.appendChild(t);
+  setTimeout(() => t.remove(), 3000);
+}
+
+// ===== APP BUILDERS =====
+function buildFileManager() {
+  return `<div class="file-manager">
+    <div class="file-sidebar">
+      <div class="sidebar-item active"><span class="material-symbols-rounded" style="font-variation-settings:'FILL' 1">home</span>בית</div>
+      <div class="sidebar-item"><span class="material-symbols-rounded" style="font-variation-settings:'FILL' 1">desktop_windows</span>שולחן עבודה</div>
+      <div class="sidebar-item"><span class="material-symbols-rounded" style="font-variation-settings:'FILL' 1">download</span>הורדות</div>
+      <div class="sidebar-item"><span class="material-symbols-rounded" style="font-variation-settings:'FILL' 1">folder</span>מסמכים</div>
+      <div class="sidebar-item"><span class="material-symbols-rounded" style="font-variation-settings:'FILL' 1">image</span>תמונות</div>
+      <div class="sidebar-item"><span class="material-symbols-rounded" style="font-variation-settings:'FILL' 1">music_note</span>מוסיקה</div>
+      <div class="sidebar-item"><span class="material-symbols-rounded" style="font-variation-settings:'FILL' 1">delete</span>אשפה</div>
+    </div>
+    <div class="file-main">
+      <div style="font-size:12px;color:var(--md-sys-color-on-surface-variant);margin-bottom:12px">בית &rsaquo;</div>
+      <div class="file-grid">
+        ${['מסמכים','הורדות','תמונות','מוסיקה','סרטים','פרויקטים'].map(n=>`
+          <div class="file-item">
+            <span class="material-symbols-rounded" style="font-variation-settings:'FILL' 1;color:var(--md-sys-color-primary)">folder</span>
+            <span class="file-name">${n}</span>
+          </div>`).join('')}
+        ${['קובץ.txt','תמונה.jpg','מסמך.pdf','קוד.js','מצגת.pptx'].map(n=>`
+          <div class="file-item">
+            <span class="material-symbols-rounded" style="font-variation-settings:'FILL' 1;color:var(--md-sys-color-secondary)">description</span>
+            <span class="file-name">${n}</span>
+          </div>`).join('')}
+      </div>
+    </div>
+  </div>`;
+}
+
+function buildBrowser() {
+  return `<div class="browser">
+    <div class="browser-bar">
+      <button class="browser-nav-btn"><span class="material-symbols-rounded">arrow_back</span></button>
+      <button class="browser-nav-btn"><span class="material-symbols-rounded">arrow_forward</span></button>
+      <button class="browser-nav-btn"><span class="material-symbols-rounded">refresh</span></button>
+      <input class="url-bar" value="ros://home" placeholder="הכנס כתובת..." dir="ltr">
+      <button class="browser-nav-btn"><span class="material-symbols-rounded">star</span></button>
+    </div>
+    <div class="browser-content">
+      <div class="browser-logo">ROS Web</div>
+      <div style="font-size:14px;color:var(--md-sys-color-on-surface-variant)">חפש או הכנס כתובת</div>
+      <div class="browser-shortcuts">
+        ${[
+          {icon:'language',name:'אינטרנט'},
+          {icon:'mail',name:'דואר'},
+          {icon:'cloud',name:'ענן'},
+          {icon:'shopping_cart',name:'חנות'},
+        ].map(s=>`<div class="browser-shortcut">
+          <span class="material-symbols-rounded" style="font-variation-settings:'FILL' 1">${s.icon}</span>
+          <span>${s.name}</span>
+        </div>`).join('')}
+      </div>
+    </div>
+  </div>`;
+}
+
+function buildTextEditor() {
+  return `<div class="text-editor">
+    <div class="editor-toolbar">
+      <button class="tool-btn"><span class="material-symbols-rounded">format_bold</span></button>
+      <button class="tool-btn"><span class="material-symbols-rounded">format_italic</span></button>
+      <button class="tool-btn"><span class="material-symbols-rounded">format_underlined</span></button>
+      <div class="tool-sep"></div>
+      <button class="tool-btn"><span class="material-symbols-rounded">format_align_right</span></button>
+      <button class="tool-btn"><span class="material-symbols-rounded">format_align_center</span></button>
+      <button class="tool-btn"><span class="material-symbols-rounded">format_align_left</span></button>
+      <div class="tool-sep"></div>
+      <button class="tool-btn"><span class="material-symbols-rounded">format_list_bulleted</span></button>
+      <button class="tool-btn"><span class="material-symbols-rounded">save</span></button>
+    </div>
+    <textarea id="text-area" placeholder="התחל להקליד כאן...&#10;&#10;ברוך הבא לעורך הטקסט של ROS!"></textarea>
+  </div>`;
+}
+
+function buildCalculator() {
+  return `<div class="calculator">
+    <div class="calc-display">
+      <div class="calc-expr" id="calc-expr"></div>
+      <div class="calc-result" id="calc-result">0</div>
+    </div>
+    <div class="calc-btns">
+      <button class="calc-btn fn" onclick="calcFn('AC')">AC</button>
+      <button class="calc-btn fn" onclick="calcFn('+/-')">+/-</button>
+      <button class="calc-btn fn" onclick="calcFn('%')">%</button>
+      <button class="calc-btn op" onclick="calcOp('/')">÷</button>
+      <button class="calc-btn num" onclick="calcNum('7')">7</button>
+      <button class="calc-btn num" onclick="calcNum('8')">8</button>
+      <button class="calc-btn num" onclick="calcNum('9')">9</button>
+      <button class="calc-btn op" onclick="calcOp('*')">×</button>
+      <button class="calc-btn num" onclick="calcNum('4')">4</button>
+      <button class="calc-btn num" onclick="calcNum('5')">5</button>
+      <button class="calc-btn num" onclick="calcNum('6')">6</button>
+      <button class="calc-btn op" onclick="calcOp('-')">−</button>
+      <button class="calc-btn num" onclick="calcNum('1')">1</button>
+      <button class="calc-btn num" onclick="calcNum('2')">2</button>
+      <button class="calc-btn num" onclick="calcNum('3')">3</button>
+      <button class="calc-btn op" onclick="calcOp('+')">+</button>
+      <button class="calc-btn num" style="grid-column:span 2" onclick="calcNum('0')">0</button>
+      <button class="calc-btn num" onclick="calcNum('.')">.</button>
+      <button class="calc-btn eq" onclick="calcEq()">=</button>
+    </div>
+  </div>`;
+}
+
+// Calculator logic
+let calcCurrent = '0', calcPrev = '', calcOperator = '', calcNewNum = true;
+function calcNum(n) {
+  if (calcNewNum) { calcCurrent = n === '.' ? '0.' : n; calcNewNum = false; }
+  else {
+    if (n === '.' && calcCurrent.includes('.')) return;
+    calcCurrent = calcCurrent === '0' && n !== '.' ? n : calcCurrent + n;
+  }
+  document.getElementById('calc-result').textContent = calcCurrent;
+}
+function calcOp(op) {
+  calcPrev = calcCurrent; calcOperator = op; calcNewNum = true;
+  document.getElementById('calc-expr').textContent = calcCurrent + ' ' + op;
+}
+function calcEq() {
+  if (!calcOperator) return;
+  const a = parseFloat(calcPrev), b = parseFloat(calcCurrent);
+  let r = 0;
+  if (calcOperator==='+') r=a+b; else if (calcOperator==='-') r=a-b;
+  else if (calcOperator==='*') r=a*b; else if (calcOperator==='/') r=b?a/b:'שגיאה';
+  document.getElementById('calc-expr').textContent = calcPrev + ' ' + calcOperator + ' ' + calcCurrent + ' =';
+  calcCurrent = String(r); calcOperator = ''; calcNewNum = true;
+  document.getElementById('calc-result').textContent = calcCurrent;
+}
+function calcFn(fn) {
+  if (fn==='AC') { calcCurrent='0'; calcPrev=''; calcOperator=''; calcNewNum=true; document.getElementById('calc-result').textContent='0'; document.getElementById('calc-expr').textContent=''; }
+  else if (fn==='%') { calcCurrent=String(parseFloat(calcCurrent)/100); document.getElementById('calc-result').textContent=calcCurrent; }
+  else if (fn==='+/-') { calcCurrent=String(-parseFloat(calcCurrent)); document.getElementById('calc-result').textContent=calcCurrent; }
+}
+
+function buildSettings() {
+  return `<div class="settings-app">
+    <div class="settings-nav">
+      ${[
+        {icon:'palette',name:'מראה'},
+        {icon:'wifi',name:'רשת'},
+        {icon:'bluetooth',name:'בלוטות\''},
+        {icon:'volume_up',name:'צליל'},
+        {icon:'notifications',name:'התראות'},
+        {icon:'lock',name:'פרטיות'},
+        {icon:'battery_full',name:'סוללה'},
+        {icon:'storage',name:'אחסון'},
+        {icon:'apps',name:'אפליקציות'},
+        {icon:'info',name:'אודות'},
+      ].map(s=>`<div class="sidebar-item"><span class="material-symbols-rounded" style="font-variation-settings:'FILL' 1">${s.icon}</span>${s.name}</div>`).join('')}
+    </div>
+    <div class="settings-content">
+      <div class="settings-group">
+        <div class="settings-group-title">מראה</div>
+        <div class="settings-item">
+          <span class="material-symbols-rounded" style="font-variation-settings:'FILL' 1">dark_mode</span>
+          <div class="settings-item-text"><div class="title">מצב לילה</div><div class="subtitle">שנה לצבעים כהים</div></div>
+          <div class="toggle" onclick="this.classList.toggle('on');document.documentElement.dataset.theme=this.classList.contains('on')?'dark':''"></div>
+        </div>
+        <div class="settings-item">
+          <span class="material-symbols-rounded" style="font-variation-settings:'FILL' 1">wallpaper</span>
+          <div class="settings-item-text"><div class="title">טפט</div><div class="subtitle">שנה את תמונת הרקע</div></div>
+          <button onclick="changeWallpaper()" style="padding:8px 16px;border-radius:20px;background:var(--md-sys-color-primary);color:white;border:none;cursor:pointer;font-family:inherit">שנה</button>
+        </div>
+        <div class="settings-item">
+          <span class="material-symbols-rounded" style="font-variation-settings:'FILL' 1">palette</span>
+          <div class="settings-item-text">
+            <div class="title">צבע ראשי</div>
+            <div class="subtitle">בחר את צבע המערכת</div>
+            <div class="color-swatches" style="margin-top:8px">
+              ${[
+                ['#6750A4','#4F378B'],
+                ['#006E1C','#00522A'],
+                ['#984717','#7A3A00'],
+                ['#00639B','#00497A'],
+                ['#8B379A','#6C2080'],
+              ].map(([c,d])=>`<div class="color-swatch" style="background:${c}" onclick="setThemeColor('${c}','${d}')"></div>`).join('')}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="settings-group">
+        <div class="settings-group-title">אודות ROS</div>
+        <div class="settings-item" style="cursor:default">
+          <span class="material-symbols-rounded" style="font-variation-settings:'FILL' 1">info</span>
+          <div class="settings-item-text">
+            <div class="title">ROS v1.0</div>
+            <div class="subtitle">מערכת הפעלה מבוססת Material 3 | HTML/CSS/JS</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function setThemeColor(primary, dark) {
+  document.documentElement.style.setProperty('--md-sys-color-primary', primary);
+  document.documentElement.style.setProperty('--md-sys-color-primary-container', dark + '44');
+  showToast('צבע שונה');
+}
+
+function buildTerminal() {
+  return `<div class="terminal">
+    <div class="terminal-output" id="term-output">
+      <div class="terminal-line" style="color:#a78bfa">ROS Terminal v1.0 — Material 3 Shell</div>
+      <div class="terminal-line" style="color:#6b7280">הקלד 'help' לרשימת פקודות</div>
+      <div class="terminal-line"> </div>
+    </div>
+    <div class="terminal-input-row">
+      <span class="terminal-prompt">user@ros:~$</span>
+      <input id="terminal-input" type="text" autocomplete="off" spellcheck="false">
+    </div>
+  </div>`;
+}
+
+const termCmds = {
+  help: () => ['פקודות זמינות:','  ls       - רשימת קבצים','  pwd      - ספריה נוכחית','  echo     - הדפס טקסט','  date     - תאריך ושעה','  clear    - נקה מסך','  whoami   - שם משתמש','  uname    - מידע מערכת','  cal      - לוח שנה'],
+  ls: () => ['Documents/','Downloads/','Pictures/','Music/','Projects/','README.txt'],
+  pwd: () => ['/home/user'],
+  whoami: () => ['user'],
+  date: () => [new Date().toLocaleString('he-IL')],
+  uname: () => ['ROS 1.0 Material3-Shell x86_64'],
+  cal: () => {
+    const d = new Date(); const m = d.toLocaleString('he-IL',{month:'long',year:'numeric'});
+    return [m, 'א  ב  ג  ד  ה  ו  ש', '1  2  3  4  5  6  7','8  9  10 11 12 13 14'];
+  },
+};
+
+function initTerminal() {
+  setTimeout(() => {
+    const inp = document.getElementById('terminal-input');
+    if (!inp) return;
+    inp.addEventListener('keydown', e => {
+      if (e.key !== 'Enter') return;
+      const cmd = inp.value.trim(); inp.value = '';
+      const out = document.getElementById('term-output');
+      const cmdLine = document.createElement('div');
+      cmdLine.className = 'terminal-line cmd';
+      cmdLine.textContent = 'user@ros:~$ ' + cmd;
+      out.appendChild(cmdLine);
+      if (cmd === 'clear') { out.innerHTML = ''; return; }
+      if (!cmd) { out.appendChild(document.createElement('div')); }
+      else if (cmd.startsWith('echo ')) {
+        const l=document.createElement('div'); l.className='terminal-line'; l.textContent=cmd.slice(5); out.appendChild(l);
+      } else if (termCmds[cmd]) {
+        termCmds[cmd]().forEach(line => { const l=document.createElement('div'); l.className='terminal-line'; l.textContent=line; out.appendChild(l); });
+      } else {
+        const l=document.createElement('div'); l.className='terminal-line err'; l.textContent=`bash: ${cmd}: command not found`; out.appendChild(l);
+      }
+      out.scrollTop = out.scrollHeight;
+    });
+  }, 100);
+}
+
+function buildMusicPlayer() {
+  return `<div class="music-player">
+    <div class="album-art">🎵</div>
+    <div class="song-info">
+      <div class="song-title">Material Dreams</div>
+      <div class="song-artist">ROS Music • Album Unknown</div>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-track"><div class="progress-fill" id="music-progress"></div></div>
+      <div class="progress-times"><span>1:23</span><span>3:58</span></div>
+    </div>
+    <div class="music-controls">
+      <button class="ctrl-btn sm"><span class="material-symbols-rounded">shuffle</span></button>
+      <button class="ctrl-btn sm"><span class="material-symbols-rounded">skip_previous</span></button>
+      <button class="ctrl-btn lg" id="play-btn" onclick="togglePlay()"><span class="material-symbols-rounded">pause</span></button>
+      <button class="ctrl-btn sm"><span class="material-symbols-rounded">skip_next</span></button>
+      <button class="ctrl-btn sm"><span class="material-symbols-rounded">repeat</span></button>
+    </div>
+    <div class="slider-row" style="width:100%">
+      <span class="material-symbols-rounded" style="font-size:20px;color:var(--md-sys-color-on-surface-variant)">volume_down</span>
+      <input type="range" min="0" max="100" value="70" style="flex:1">
+      <span class="material-symbols-rounded" style="font-size:20px;color:var(--md-sys-color-on-surface-variant)">volume_up</span>
+    </div>
+  </div>`;
+}
+
+let musicPlaying = true, musicInterval;
+function startMusic() {
+  let p = 35;
+  musicInterval = setInterval(() => {
+    if (!musicPlaying) return;
+    p = Math.min(100, p + 0.1);
+    const el = document.getElementById('music-progress');
+    if (el) el.style.width = p + '%'; else clearInterval(musicInterval);
+  }, 100);
+}
+function togglePlay() {
+  musicPlaying = !musicPlaying;
+  const btn = document.getElementById('play-btn');
+  if (btn) btn.querySelector('span').textContent = musicPlaying ? 'pause' : 'play_arrow';
+}
+
+function buildGallery() {
+  const emojis = ['🌅','🏔️','🌊','🌸','🦋','🌺','🎨','🌙','⭐','🌈','🦜','🏝️','🌿','🦁','🐬','🌻'];
+  const colors = ['#EADDFF','#D0E4FF','#DCF5E7','#FFF3CD','#FCE4EC','#E1F5FE','#F3E5F5','#E8F5E9'];
+  return `<div class="gallery">
+    <div class="gallery-grid">
+      ${emojis.map((e,i)=>`<div class="gallery-item" style="background:${colors[i%colors.length]}">${e}</div>`).join('')}
+    </div>
+  </div>`;
+}
+
+function buildCalendar() {
+  setTimeout(() => {
+    const el = document.getElementById('calendar-content');
+    if (!el) return;
+    const now = new Date();
+    const year = now.getFullYear(), month = now.getMonth();
+    const monthName = now.toLocaleString('he-IL', { month: 'long', year: 'numeric' });
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const today = now.getDate();
+    let html = `<div class="cal-header">
+      <button class="taskbar-icon-btn"><span class="material-symbols-rounded">chevron_right</span></button>
+      <span class="cal-title">${monthName}</span>
+      <button class="taskbar-icon-btn"><span class="material-symbols-rounded">chevron_left</span></button>
+    </div><div class="cal-grid">`;
+    ['א','ב','ג','ד','ה','ו','ש'].forEach(d => html += `<div class="cal-day-label">${d}</div>`);
+    for (let i = 0; i < firstDay; i++) html += `<div></div>`;
+    for (let d = 1; d <= daysInMonth; d++) {
+      html += `<div class="cal-day${d===today?' today':''}">${d}</div>`;
+    }
+    html += '</div>';
+    el.innerHTML = html;
+  }, 50);
+}
+
+function buildMail() {
+  return `<div style="display:flex;height:100%">
+    <div style="width:200px;padding:8px;border-right:1px solid var(--md-sys-color-outline-variant)">
+      <button style="width:100%;padding:12px 16px;border-radius:16px;background:var(--md-sys-color-primary);color:white;border:none;cursor:pointer;font-family:inherit;font-size:14px;margin-bottom:8px">+ כתוב</button>
+      ${['דואר נכנס (3)','נשלח','טיוטות','ספאם','אשפה'].map(f=>`<div class="sidebar-item">${f}</div>`).join('')}
+    </div>
+    <div style="flex:1;overflow-y:auto">
+      ${[
+        {from:'צוות ROS',subj:'ברוכים הבאים!',preview:'תודה שבחרתם ב-ROS...', time:'עכשיו'},
+        {from:'עדכוני מערכת',subj:'עדכון זמין 1.0.1',preview:'תיקוני באגים ושיפורים...', time:'לפני שעה'},
+        {from:'חנות האפליקציות',subj:'אפליקציות חדשות!',preview:'גלה אפליקציות מומלצות...', time:'אתמול'},
+      ].map(m=>`<div style="padding:16px;border-bottom:1px solid var(--md-sys-color-outline-variant);cursor:pointer;transition:background .15s" onmouseover="this.style.background='var(--md-sys-color-surface-1)'" onmouseout="this.style.background=''">
+        <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+          <span style="font-size:13px;font-weight:500">${m.from}</span>
+          <span style="font-size:11px;color:var(--md-sys-color-on-surface-variant)">${m.time}</span>
+        </div>
+        <div style="font-size:13px;margin-bottom:2px">${m.subj}</div>
+        <div style="font-size:12px;color:var(--md-sys-color-on-surface-variant)">${m.preview}</div>
+      </div>`).join('')}
+    </div>
+  </div>`;
+}
+
+// Close launcher when clicking outside
+document.getElementById('desktop-area').addEventListener('click', () => closeLauncher());
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeLauncher(); closeContextMenu(); } });
+</script>
+</body>
+</html>
