@@ -874,7 +874,7 @@ function buildDesktop() {
   APPS.forEach(app => {
     const el = document.createElement('div');
     el.className = 'desktop-icon';
-    el.ondblclick = () => openApp(app.id);
+    el.onclick = (e) => { e.stopPropagation(); openApp(app.id); };
     el.innerHTML = `
       <div class="icon-bg" style="background:${app.color};color:${app.iconColor}">
         <span class="material-symbols-rounded" style="font-variation-settings:'FILL' 1">${app.icon}</span>
@@ -935,10 +935,18 @@ function openApp(id) {
     }
   }
 
+  const size = getDefaultSize(id);
+  // Clamp so the window always opens fully on-screen (64px reserved for taskbar)
+  const w = Math.min(size.w, window.innerWidth - 24);
+  const h = Math.min(size.h, window.innerHeight - 88);
+  const maxLeft = Math.max(8, window.innerWidth - w - 16);
+  const maxTop = Math.max(8, window.innerHeight - h - 72);
+  const left = Math.min(80 + Math.random() * 120, maxLeft);
+  const top = Math.min(60 + Math.random() * 80, maxTop);
   const win = document.createElement('div');
   win.className = 'window';
   win.id = 'win-' + id;
-  win.style.cssText = `width:${getDefaultSize(id).w}px;height:${getDefaultSize(id).h}px;top:${60 + Math.random()*80}px;left:${80 + Math.random()*120}px;z-index:${++zCounter}`;
+  win.style.cssText = `width:${w}px;height:${h}px;top:${top}px;left:${left}px;z-index:${++zCounter}`;
   win.innerHTML = `
     <div class="window-titlebar" onmousedown="startDrag(event,'${id}')">
       <span class="material-symbols-rounded window-title-icon" style="color:${app.iconColor};font-variation-settings:'FILL' 1">${app.icon}</span>
@@ -1054,8 +1062,11 @@ document.addEventListener('mousemove', e => {
   if (dragState) {
     const win = document.getElementById('win-' + dragState.id);
     if (win) {
-      win.style.left = (dragState.origLeft + e.clientX - dragState.startX) + 'px';
-      win.style.top = Math.max(0, dragState.origTop + e.clientY - dragState.startY) + 'px';
+      // Keep at least 80px of the window visible horizontally and the titlebar on-screen
+      const newLeft = dragState.origLeft + e.clientX - dragState.startX;
+      const newTop = dragState.origTop + e.clientY - dragState.startY;
+      win.style.left = Math.max(80 - win.offsetWidth, Math.min(newLeft, window.innerWidth - 80)) + 'px';
+      win.style.top = Math.max(0, Math.min(newTop, window.innerHeight - 110)) + 'px';
     }
   }
   if (resizeState) {
@@ -1080,6 +1091,9 @@ function startResize(e, id) {
 // ===== CONTEXT MENU =====
 function showCtxMenu(e) {
   e.preventDefault();
+  // Only show the desktop menu when right-clicking the desktop itself,
+  // not inside an open window or on an icon
+  if (e.target.closest('.window')) return;
   const m = document.getElementById('context-menu');
   m.style.display = 'block';
   m.style.left = Math.min(e.clientX, window.innerWidth - 200) + 'px';
@@ -1311,8 +1325,11 @@ function buildSettings() {
 }
 
 function setThemeColor(primary, dark) {
-  document.documentElement.style.setProperty('--md-sys-color-primary', primary);
-  document.documentElement.style.setProperty('--md-sys-color-primary-container', dark + '44');
+  const root = document.documentElement;
+  root.style.setProperty('--md-sys-color-primary', primary);
+  root.style.setProperty('--md-sys-color-primary-container', `color-mix(in srgb, ${primary} 22%, var(--md-sys-color-surface))`);
+  root.style.setProperty('--md-sys-color-on-primary-container', dark);
+  document.querySelectorAll('.color-swatch').forEach(s => s.classList.toggle('selected', s.style.background === primary || s.getAttribute('style').includes(primary)));
   showToast('צבע שונה');
 }
 
@@ -1347,6 +1364,8 @@ function initTerminal() {
   setTimeout(() => {
     const inp = document.getElementById('terminal-input');
     if (!inp) return;
+    inp.focus();
+    document.getElementById('term-output')?.addEventListener('click', () => inp.focus());
     inp.addEventListener('keydown', e => {
       if (e.key !== 'Enter') return;
       const cmd = inp.value.trim(); inp.value = '';
@@ -1397,6 +1416,8 @@ function buildMusicPlayer() {
 
 let musicPlaying = true, musicInterval;
 function startMusic() {
+  clearInterval(musicInterval);
+  musicPlaying = true;
   let p = 35;
   musicInterval = setInterval(() => {
     if (!musicPlaying) return;
@@ -1469,9 +1490,19 @@ function buildMail() {
   </div>`;
 }
 
-// Close launcher when clicking outside
-document.getElementById('desktop-area').addEventListener('click', () => closeLauncher());
-document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeLauncher(); closeContextMenu(); } });
+// Close launcher + notification panel when clicking outside them
+document.addEventListener('click', e => {
+  if (!e.target.closest('#launcher') && !e.target.closest('#start-btn')) closeLauncher();
+  if (!e.target.closest('#notif-panel') && !e.target.closest('.taskbar-icon-btn')) {
+    document.getElementById('notif-panel').classList.remove('open');
+  }
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    closeLauncher(); closeContextMenu();
+    document.getElementById('notif-panel').classList.remove('open');
+  }
+});
 </script>
 </body>
 </html>

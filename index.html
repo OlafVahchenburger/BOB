@@ -527,19 +527,22 @@
 <div class="dialog-overlay" id="settingsDialog">
   <div class="dialog">
     <h2>הגדרות AI</h2>
-    <p>הגדר את מפתח ה-API ובחר מודל. המפתח נשמר רק בדפדפן שלך (localStorage).</p>
+    <p>בחר ספק AI, הגדר מפתח API ובחר מודל. המפתחות נשמרים רק בדפדפן שלך (localStorage).</p>
+
+    <label style="font-size:12px;color:var(--md-sys-color-on-surface-variant);margin-bottom:8px;display:block">ספק AI</label>
+    <div class="model-selector" id="providerSelector">
+      <button class="model-chip" data-provider="anthropic" onclick="selectProvider(this)">Claude (Anthropic)</button>
+      <button class="model-chip" data-provider="openai" onclick="selectProvider(this)">ChatGPT (OpenAI)</button>
+      <button class="model-chip" data-provider="google" onclick="selectProvider(this)">Gemini (Google)</button>
+    </div>
 
     <div class="field-wrapper">
       <input type="password" id="apiKeyInput" placeholder=" " />
-      <label>Anthropic API Key</label>
+      <label id="apiKeyLabel">Anthropic API Key</label>
     </div>
 
     <label style="font-size:12px;color:var(--md-sys-color-on-surface-variant);margin-bottom:8px;display:block">מודל</label>
-    <div class="model-selector">
-      <button class="model-chip selected" data-model="claude-opus-4-8" onclick="selectModel(this)">Claude Opus 4.8</button>
-      <button class="model-chip" data-model="claude-sonnet-4-6" onclick="selectModel(this)">Claude Sonnet 4.6</button>
-      <button class="model-chip" data-model="claude-haiku-4-5-20251001" onclick="selectModel(this)">Claude Haiku 4.5</button>
-    </div>
+    <div class="model-selector" id="modelSelector"></div>
 
     <div class="field-wrapper">
       <input type="text" id="systemPromptInput" placeholder=" " />
@@ -560,11 +563,54 @@
   const SETTINGS_KEY  = 'aiSettings';
   const SESSIONS_KEY  = 'aiSessions';
 
+  // ─── AI Providers ───────────────────────────────────────────────────
+  const PROVIDERS = {
+    anthropic: {
+      name: 'Claude',
+      keyLabel: 'Anthropic API Key',
+      models: [
+        ['claude-opus-4-8', 'Claude Opus 4.8'],
+        ['claude-sonnet-4-6', 'Claude Sonnet 4.6'],
+        ['claude-haiku-4-5-20251001', 'Claude Haiku 4.5'],
+      ],
+    },
+    openai: {
+      name: 'ChatGPT',
+      keyLabel: 'OpenAI API Key',
+      models: [
+        ['gpt-4o', 'GPT-4o'],
+        ['gpt-4o-mini', 'GPT-4o mini'],
+        ['gpt-4.1', 'GPT-4.1'],
+        ['o3-mini', 'o3-mini'],
+      ],
+    },
+    google: {
+      name: 'Gemini',
+      keyLabel: 'Google AI API Key',
+      models: [
+        ['gemini-2.5-pro', 'Gemini 2.5 Pro'],
+        ['gemini-2.5-flash', 'Gemini 2.5 Flash'],
+        ['gemini-2.0-flash', 'Gemini 2.0 Flash'],
+      ],
+    },
+  };
+
   let settings = JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}');
   let sessions = JSON.parse(localStorage.getItem(SESSIONS_KEY) || '[]');
   let currentSessionId = null;
   let isLoading = false;
-  let selectedModel = settings.model || 'claude-opus-4-8';
+
+  // Migrate old single-key settings format
+  if (!settings.apiKeys) {
+    settings.apiKeys = { anthropic: settings.apiKey || '', openai: '', google: '' };
+  }
+  let selectedProvider = settings.provider in PROVIDERS ? settings.provider : 'anthropic';
+  let selectedModel = settings.model || PROVIDERS[selectedProvider].models[0][0];
+  if (!PROVIDERS[selectedProvider].models.some(([id]) => id === selectedModel)) {
+    selectedModel = PROVIDERS[selectedProvider].models[0][0];
+  }
+
+  function currentApiKey() { return (settings.apiKeys[selectedProvider] || '').trim(); }
 
   function getKB() { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
   function getCategories() { return JSON.parse(localStorage.getItem(CATEGORY_KEY) || '[]'); }
@@ -739,7 +785,7 @@
     const text = input.value.trim();
     if (!text || isLoading) return;
 
-    if (!settings.apiKey) { openSettings(); return; }
+    if (!currentApiKey()) { openSettings(); return; }
     if (!currentSessionId) newChat();
 
     const session = currentSession();
@@ -760,7 +806,7 @@
     showTyping();
 
     try {
-      const reply = await callClaude(session.messages);
+      const reply = await callAI(session.messages);
       hideTyping();
       session.messages.push({ role: 'assistant', content: reply });
       saveSessions();
@@ -774,8 +820,8 @@
     document.getElementById('sendBtn').disabled = false;
   }
 
-  // ─── Claude API ──────────────────────────────────────────────────
-  async function callClaude(history) {
+  // ─── AI APIs ──────────────────────────────────────────────────────
+  function buildSystemPrompt() {
     const kb    = getKB();
     const cats  = getCategories();
 
@@ -792,25 +838,36 @@
 
       systemPrompt += `\n\n--- מאגר הידע של המשתמש ---\n${kbText}\n\nהשתמש במידע זה כשרלוונטי. כאשר אתה מזכיר פריט מהמאגר, עטוף אותו ב-[[שם הפריט]].`;
     }
+    return systemPrompt;
+  }
 
-    const messages = history.map(m => ({
+  function normalizeHistory(history) {
+    return history.map(m => ({
       role: m.role === 'ai' ? 'assistant' : m.role,
       content: m.content
     }));
+  }
 
+  async function callAI(history) {
+    if (selectedProvider === 'openai') return callOpenAI(history);
+    if (selectedProvider === 'google') return callGemini(history);
+    return callClaude(history);
+  }
+
+  async function callClaude(history) {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': settings.apiKey,
+        'x-api-key': currentApiKey(),
         'anthropic-version': '2023-06-01',
         'anthropic-dangerous-direct-browser-calls': 'true'
       },
       body: JSON.stringify({
         model: selectedModel,
         max_tokens: 2048,
-        system: systemPrompt,
-        messages
+        system: buildSystemPrompt(),
+        messages: normalizeHistory(history)
       })
     });
 
@@ -823,34 +880,119 @@
     return data.content[0].text;
   }
 
-  // ─── Settings Dialog ─────────────────────────────────────────────
-  function openSettings() {
-    document.getElementById('apiKeyInput').value = settings.apiKey || '';
-    document.getElementById('systemPromptInput').value = settings.systemPrompt || '';
-    // Highlight selected model
-    document.querySelectorAll('.model-chip').forEach(btn => {
-      btn.classList.toggle('selected', btn.dataset.model === selectedModel);
+  async function callOpenAI(history) {
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + currentApiKey()
+      },
+      body: JSON.stringify({
+        model: selectedModel,
+        max_completion_tokens: 2048,
+        messages: [
+          { role: 'system', content: buildSystemPrompt() },
+          ...normalizeHistory(history)
+        ]
+      })
     });
+
+    if (!response.ok) {
+      const err = await response.json().catch(() => ({}));
+      throw new Error(err.error?.message || `HTTP ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data.choices[0].message.content;
+  }
+
+  async function callGemini(history) {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${selectedModel}:generateContent?key=${encodeURIComponent(currentApiKey())}`;
+    const contents = normalizeHistory(history).map(m => ({
+      role: m.role === 'assistant' ? 'model' : 'user',
+      parts: [{ text: m.content }]
+    }));
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        systemInstruction: { parts: [{ text: buildSystemPrompt() }] },
+        contents,
+        generationConfig: { maxOutputTokens: 2048 }
+      })
+    });
+
+    if (!response.ok) {
+      const err = await response.json().catch(() => ({}));
+      throw new Error(err.error?.message || `HTTP ${response.status}`);
+    }
+
+    const data = await response.json();
+    const parts = data.candidates?.[0]?.content?.parts;
+    if (!parts || !parts.length) throw new Error('לא התקבלה תשובה מ-Gemini');
+    return parts.map(p => p.text || '').join('');
+  }
+
+  // ─── Settings Dialog ─────────────────────────────────────────────
+  // The dialog edits a draft copy of keys so "ביטול" doesn't lose changes
+  let draftKeys = {};
+  let dialogProvider = selectedProvider;
+  let dialogModel = selectedModel;
+
+  function openSettings() {
+    draftKeys = { ...settings.apiKeys };
+    dialogProvider = selectedProvider;
+    dialogModel = selectedModel;
+    document.getElementById('systemPromptInput').value = settings.systemPrompt || '';
+    renderProviderUI();
     document.getElementById('settingsDialog').classList.add('open');
   }
   function closeSettings() { document.getElementById('settingsDialog').classList.remove('open'); }
-  function selectModel(btn) {
-    document.querySelectorAll('.model-chip').forEach(b => b.classList.remove('selected'));
-    btn.classList.add('selected');
-    selectedModel = btn.dataset.model;
+
+  function renderProviderUI() {
+    const p = PROVIDERS[dialogProvider];
+    document.querySelectorAll('#providerSelector .model-chip').forEach(btn => {
+      btn.classList.toggle('selected', btn.dataset.provider === dialogProvider);
+    });
+    document.getElementById('apiKeyLabel').textContent = p.keyLabel;
+    document.getElementById('apiKeyInput').value = draftKeys[dialogProvider] || '';
+    if (!p.models.some(([id]) => id === dialogModel)) dialogModel = p.models[0][0];
+    document.getElementById('modelSelector').innerHTML = p.models.map(([id, name]) =>
+      `<button class="model-chip ${id === dialogModel ? 'selected' : ''}" data-model="${id}" onclick="selectModel(this)">${name}</button>`
+    ).join('');
   }
+
+  function selectProvider(btn) {
+    draftKeys[dialogProvider] = document.getElementById('apiKeyInput').value.trim();
+    dialogProvider = btn.dataset.provider;
+    renderProviderUI();
+  }
+
+  function selectModel(btn) {
+    document.querySelectorAll('#modelSelector .model-chip').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    dialogModel = btn.dataset.model;
+  }
+
   function saveSettings() {
-    settings.apiKey      = document.getElementById('apiKeyInput').value.trim();
-    settings.model       = selectedModel;
-    settings.systemPrompt= document.getElementById('systemPromptInput').value.trim();
+    draftKeys[dialogProvider] = document.getElementById('apiKeyInput').value.trim();
+    settings.apiKeys      = { ...draftKeys };
+    settings.provider     = dialogProvider;
+    settings.model        = dialogModel;
+    settings.systemPrompt = document.getElementById('systemPromptInput').value.trim();
+    delete settings.apiKey; // legacy field
+    selectedProvider = dialogProvider;
+    selectedModel = dialogModel;
     localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
     closeSettings();
     updateHint();
   }
+
   function updateHint() {
     const hint = document.getElementById('modelHint');
-    hint.textContent = settings.apiKey
-      ? `מחובר · ${selectedModel}`
+    hint.textContent = currentApiKey()
+      ? `מחובר · ${PROVIDERS[selectedProvider].name} · ${selectedModel}`
       : 'הגדר מפתח API בהגדרות כדי להפעיל את ה-AI';
   }
 
