@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ROS - Responsive Operating System</title>
+<title>Nano OS</title>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -793,7 +793,7 @@
       <div class="notif-header" style="margin-bottom:12px"><span>התראות</span></div>
       <div id="notifications-list">
         <div class="notif-card">
-          <div class="notif-title">ברוכים הבאים ל-ROS!</div>
+          <div class="notif-title">ברוכים הבאים ל-Nano OS!</div>
           <div class="notif-body">מערכת הפעלה מבוססת Material 3. לחץ על אפליקציות לפתיחה.</div>
         </div>
       </div>
@@ -861,7 +861,7 @@ setInterval(updateClock, 1000);
 // ===== LOCK SCREEN =====
 function unlock() {
   document.getElementById('lock-screen').classList.add('hidden');
-  showToast('ברוכים הבאים ל-ROS! 🚀');
+  showToast('ברוכים הבאים ל-Nano OS! 🚀');
 }
 function lockScreen() {
   document.getElementById('lock-screen').classList.remove('hidden');
@@ -1155,7 +1155,7 @@ function buildBrowser() {
       <button class="browser-nav-btn"><span class="material-symbols-rounded">star</span></button>
     </div>
     <div class="browser-content">
-      <div class="browser-logo">ROS Web</div>
+      <div class="browser-logo">Nano OS Web</div>
       <div style="font-size:14px;color:var(--md-sys-color-on-surface-variant)">חפש או הכנס כתובת</div>
       <div class="browser-shortcuts">
         ${[
@@ -1186,7 +1186,7 @@ function buildTextEditor() {
       <button class="tool-btn"><span class="material-symbols-rounded">format_list_bulleted</span></button>
       <button class="tool-btn"><span class="material-symbols-rounded">save</span></button>
     </div>
-    <textarea id="text-area" placeholder="התחל להקליד כאן...&#10;&#10;ברוך הבא לעורך הטקסט של ROS!"></textarea>
+    <textarea id="text-area" placeholder="התחל להקליד כאן...&#10;&#10;ברוך הבא לעורך הטקסט של Nano OS!"></textarea>
   </div>`;
 }
 
@@ -1297,11 +1297,11 @@ function buildSettings() {
         </div>
       </div>
       <div class="settings-group">
-        <div class="settings-group-title">אודות ROS</div>
+        <div class="settings-group-title">אודות Nano OS</div>
         <div class="settings-item" style="cursor:default">
           <span class="material-symbols-rounded" style="font-variation-settings:'FILL' 1">info</span>
           <div class="settings-item-text">
-            <div class="title">ROS v1.0</div>
+            <div class="title">Nano OS v1.0</div>
             <div class="subtitle">מערכת הפעלה מבוססת Material 3 | HTML/CSS/JS</div>
           </div>
         </div>
@@ -1319,7 +1319,7 @@ function setThemeColor(primary, dark) {
 function buildTerminal() {
   return `<div class="terminal">
     <div class="terminal-output" id="term-output">
-      <div class="terminal-line" style="color:#a78bfa">ROS Terminal v1.0 — Material 3 Shell</div>
+      <div class="terminal-line" style="color:#a78bfa">Nano OS Terminal v1.0 — Material 3 Shell</div>
       <div class="terminal-line" style="color:#6b7280">הקלד 'help' לרשימת פקודות</div>
       <div class="terminal-line"> </div>
     </div>
@@ -1336,7 +1336,7 @@ const termCmds = {
   pwd: () => ['/home/user'],
   whoami: () => ['user'],
   date: () => [new Date().toLocaleString('he-IL')],
-  uname: () => ['ROS 1.0 Material3-Shell x86_64'],
+  uname: () => ['Nano OS 1.0 Material3-Shell x86_64'],
   cal: () => {
     const d = new Date(); const m = d.toLocaleString('he-IL',{month:'long',year:'numeric'});
     return [m, 'א  ב  ג  ד  ה  ו  ש', '1  2  3  4  5  6  7','8  9  10 11 12 13 14'];
@@ -1374,7 +1374,7 @@ function buildMusicPlayer() {
     <div class="album-art">🎵</div>
     <div class="song-info">
       <div class="song-title">Material Dreams</div>
-      <div class="song-artist">ROS Music • Album Unknown</div>
+      <div class="song-artist">Nano OS Music • Album Unknown</div>
     </div>
     <div class="progress-bar">
       <div class="progress-track"><div class="progress-fill" id="music-progress"></div></div>
@@ -1454,7 +1454,7 @@ function buildMail() {
     </div>
     <div style="flex:1;overflow-y:auto">
       ${[
-        {from:'צוות ROS',subj:'ברוכים הבאים!',preview:'תודה שבחרתם ב-ROS...', time:'עכשיו'},
+        {from:'צוות Nano OS',subj:'ברוכים הבאים!',preview:'תודה שבחרתם ב-Nano OS...', time:'עכשיו'},
         {from:'עדכוני מערכת',subj:'עדכון זמין 1.0.1',preview:'תיקוני באגים ושיפורים...', time:'לפני שעה'},
         {from:'חנות האפליקציות',subj:'אפליקציות חדשות!',preview:'גלה אפליקציות מומלצות...', time:'אתמול'},
       ].map(m=>`<div style="padding:16px;border-bottom:1px solid var(--md-sys-color-outline-variant);cursor:pointer;transition:background .15s" onmouseover="this.style.background='var(--md-sys-color-surface-1)'" onmouseout="this.style.background=''">
